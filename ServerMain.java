@@ -6,8 +6,10 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 public class ServerMain {
 
@@ -27,11 +29,41 @@ public class ServerMain {
         return new Request(hashPwd, pwdLength, fileLength);
     }
 
+    private static String arrayHashToString(byte[]  passwordToHash) {
+        String generatedPassword = null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < passwordToHash.length; i++) {
+            sb.append(Integer.toString((passwordToHash[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        generatedPassword = sb.toString();
+        return generatedPassword;
+    }
+
+    private static String passwordToHash(String passwordToHash) {
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] bytes = md.digest(passwordToHash.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bytes.length; i++) {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
+
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException,
             InvalidKeySpecException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         File decryptedFile = new File("test_file-decrypted-server.pdf");
         File networkFile = new File("temp-server.pdf");
+
+        String st;
+        File dictionnary = new File("10k-most-common_filered.txt");
+        BufferedReader br = new BufferedReader(new FileReader(dictionnary));
 
         ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");
@@ -44,12 +76,17 @@ public class ServerMain {
         // Stream to write response to socket
         DataOutputStream outSocket = new DataOutputStream(socket.getOutputStream());
 
-
         // Stream to write the file to decrypt
         OutputStream outFile = new FileOutputStream(networkFile);
 
         Request request = readRequest(dataInputStream);
         long fileLength = request.getLengthFile();
+        int pwdLength = request.getLengthPwd();
+        String hashPwd = arrayHashToString(request.getHashPassword());
+
+        System.out.println("fileLength: " + fileLength);
+        System.out.println("pwdLength: " + pwdLength);
+        System.out.println("hashPwd: " + hashPwd);
 
         FileManagement.receiveFile(inputStream, outFile, fileLength);
         /*
@@ -64,10 +101,13 @@ public class ServerMain {
             outFile.write(readBuffer, 0, bytesRead);
         }*/
 
-        System.out.println("File length: " + networkFile.length());
-
-        // HERE THE PASSWORD IS HARDCODED, YOU MUST REPLACE THAT WITH THE BRUTEFORCE PROCESS
-        String password = "test";
+        String password = "";
+        while ((st = br.readLine()) != null){
+            if(hashPwd.equals(passwordToHash(st))){
+                password = st;
+                System.out.println("Mot de passe trouvé :" + password);
+            }
+        }
         SecretKey serverKey = CryptoUtils.getKeyFromPassword(password);
 
         CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);

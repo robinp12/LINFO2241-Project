@@ -84,7 +84,6 @@ public class Main {
             long fileLengthServer = inSocket.readLong();
             System.out.println("Length from the server: "+ fileLengthServer);
             FileManagement.receiveFile(inSocket, outFile, fileLengthServer);
-
             /*
             int readFromSocket = 0;
             int byteRead;
