@@ -13,6 +13,8 @@ import java.util.Arrays;
 
 public class ServerMain {
 
+    private static String pwd;
+
     /**
      * @param in Stream from which to read the request
      * @return Request with information required by the server to process encrypted file
@@ -55,30 +57,53 @@ public class ServerMain {
         return generatedPassword;
     }
 
+    // The main recursive method
+    // set variable found password in pwd
+    private static void printAllKLengthRec(char[] letter, String prefix, int n, int mdpLength,String hash) {
+        // Base case: mdpLength is 0,
+        // set if find prefix
+        if (mdpLength == 0) {
+            if(hash.equals(passwordToHash(prefix))) pwd = prefix;
+            return;
+        }
+
+        // One by one add all characters
+        // from set and recursively
+        // call for mdpLength equals to mdpLength-1
+        for (int i = 0; i < n; i++) {
+            // Next character of input added
+            String newPrefix = prefix + letter[i];
+
+            // mdpLength is decreased, because
+            // we have added a new character
+            printAllKLengthRec(letter, newPrefix, n, mdpLength - 1,hash);
+        }
+    }
+
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException,
             InvalidKeySpecException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        // Template decrypted file
         File decryptedFile = new File("test_file-decrypted-server.pdf");
+        // Template file from client
         File networkFile = new File("temp-server.pdf");
 
-        String st;
-        File dictionnary = new File("10k-most-common_filered.txt");
-        BufferedReader br = new BufferedReader(new FileReader(dictionnary));
-
+        char letter[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+        // Create socket
         ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");
+
         Socket socket = ss.accept();
         System.out.println("Connection from: " + socket);
-
         // Stream to read request from socket
         InputStream inputStream = socket.getInputStream();
         DataInputStream dataInputStream = new DataInputStream(inputStream);
         // Stream to write response to socket
         DataOutputStream outSocket = new DataOutputStream(socket.getOutputStream());
-
         // Stream to write the file to decrypt
         OutputStream outFile = new FileOutputStream(networkFile);
 
+        // Read datas from client
         Request request = readRequest(dataInputStream);
         long fileLength = request.getLengthFile();
         int pwdLength = request.getLengthPwd();
@@ -88,6 +113,7 @@ public class ServerMain {
         System.out.println("pwdLength: " + pwdLength);
         System.out.println("hashPwd: " + hashPwd);
 
+        // GET THE RESPONSE FROM THE CLIENT
         FileManagement.receiveFile(inputStream, outFile, fileLength);
         /*
         int readFromFile = 0;
@@ -101,14 +127,10 @@ public class ServerMain {
             outFile.write(readBuffer, 0, bytesRead);
         }*/
 
-        String password = "";
-        while ((st = br.readLine()) != null){
-            if(hashPwd.equals(passwordToHash(st))){
-                password = st;
-                System.out.println("Mot de passe trouvé :" + password);
-            }
-        }
-        SecretKey serverKey = CryptoUtils.getKeyFromPassword(password);
+        /* Method to bruteforce the password */
+        printAllKLengthRec(letter, "", letter.length, pwdLength,hashPwd);
+
+        SecretKey serverKey = CryptoUtils.getKeyFromPassword(pwd);
 
         CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);
 
