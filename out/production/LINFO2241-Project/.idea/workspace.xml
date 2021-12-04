@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/LINFO2241-Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LINFO2241-Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/LINFO2241-Project/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LINFO2241-Project/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/LINFO2241-Project/ServerMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LINFO2241-Project/ServerMain.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/LINFO2241-Project/temp-server.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LINFO2241-Project/temp-server.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/LINFO2241-Project/test_file-encrypted-client.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/LINFO2241-Project/test_file-encrypted-client.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +24,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RunManager" selected="Application.ServerMain">
@@ -63,7 +60,8 @@
       <workItem from="1637695468876" duration="12571000" />
       <workItem from="1637765611324" duration="31000" />
       <workItem from="1638182229907" duration="10692000" />
-      <workItem from="1638545393934" duration="241000" />
+      <workItem from="1638545393934" duration="3185000" />
+      <workItem from="1638625021947" duration="511000" />
     </task>
     <servers />
   </component>
