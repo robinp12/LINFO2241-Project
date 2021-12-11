@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class ServerMain {
+public class ServerMain{
 
     private static String pwd;
     private static boolean isFound = false;
@@ -57,15 +57,21 @@ public class ServerMain {
         return generatedPassword;
     }
 
-    // The main recursive method
-    // set variable found password in pwd
-    private static void printAllKLengthRec(String prefix, int mdpLength,String hash) {
-        // One by one add all characters
-        // from set and recursively
-        // call for mdpLength equals to mdpLength-1
+    protected static String bruteForceDictionnary(String word) throws IOException {
+        String st;
+        File dictionnary = new File("10k-most-common_filered.txt");
+        BufferedReader br = new BufferedReader(new FileReader(dictionnary));
+        while ((st = br.readLine()) != null){
+            if(word.equals(passwordToHash(st))){
+                System.out.println(st);
+                return st;
+            }
+        }
+        return null;
+    }
+
+    protected static void bruteForceAlphabet(String prefix, int mdpLength, String hash) {
         for (char i = 'a'; i <= 'z'; i++) {
-            // Base case: mdpLength is 0,
-            // set if find prefix
             if (mdpLength == 0) {
                 System.out.println(prefix);
                 if(hash.equals(passwordToHash(prefix))) {
@@ -74,27 +80,24 @@ public class ServerMain {
                 }
                 return;
             }
-            // Next character of input added
             String newPrefix = prefix + i;
-            // mdpLength is decreased, because
-            // we have added a new character
             if (!isFound)
-                printAllKLengthRec(newPrefix, mdpLength - 1,hash);
+                bruteForceAlphabet(newPrefix, mdpLength - 1,hash);
         }
     }
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException,
             InvalidKeySpecException, NoSuchPaddingException,
-            IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+            IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InterruptedException {
         // Template decrypted file
         File decryptedFile = new File("test_file-decrypted-server.pdf");
         // Template file from client
         File networkFile = new File("temp-server.pdf");
 
-        // Create socket
         ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");
 
+        // Create socket
         Socket socket = ss.accept();
         System.out.println("Connection from: " + socket);
         // Stream to read request from socket
@@ -111,10 +114,6 @@ public class ServerMain {
         int pwdLength = request.getLengthPwd();
         String hashPwd = arrayHashToString(request.getHashPassword());
 
-        System.out.println("fileLength: " + fileLength);
-        System.out.println("pwdLength: " + pwdLength);
-        System.out.println("hashPwd: " + hashPwd);
-
         // GET THE RESPONSE FROM THE CLIENT
         FileManagement.receiveFile(inputStream, outFile, fileLength);
         /*
@@ -128,8 +127,14 @@ public class ServerMain {
             outFile.write(readBuffer, 0, bytesRead);
         }*/
 
-        /* Method to bruteforce the password */
-        printAllKLengthRec("", pwdLength,hashPwd);
+        /* Bruteforce password with thread */
+        BruteForcing bruteForcing = new BruteForcing(pwdLength, hashPwd);
+
+        Thread thread = new Thread(bruteForcing);
+        // Running thread
+        thread.start();
+        // Waiting thread to stop processing before continuing instructions
+        thread.join();
 
         SecretKey serverKey = CryptoUtils.getKeyFromPassword(pwd);
 
@@ -153,6 +158,32 @@ public class ServerMain {
         inDecrypted.close();
         outFile.close();
         socket.close();
+    }
+}
 
+class BruteForcing implements Runnable{
+
+    private final int pwdLength;
+    private final String hashPwd;
+
+    public BruteForcing(int pwdLength, String hashPwd){
+        this.pwdLength = pwdLength;
+        this.hashPwd = hashPwd;
+    }
+
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        ServerMain.bruteForceAlphabet("", pwdLength,hashPwd);
     }
 }
