@@ -74,25 +74,31 @@ public class ServerMain{
             // GET THE RESPONSE FROM THE CLIENT
             FileManagement.receiveFile(inputStream, outFile, fileLength);
             /*
-    int readFromFile = 0;
-    int bytesRead = 0;
-    byte[] readBuffer = new byte[64];
-    System.out.println("[Server] File length: "+ fileLength);
-    while((readFromFile < fileLength)){
-        bytesRead = inputStream.read(readBuffer);
-        readFromFile += bytesRead;
-        outFile.write(readBuffer, 0, bytesRead);
-    }*/
+            int readFromFile = 0;
+            int bytesRead = 0;
+            byte[] readBuffer = new byte[64];
+            System.out.println("[Server] File length: "+ fileLength);
+            while((readFromFile < fileLength)){
+                bytesRead = inputStream.read(readBuffer);
+                readFromFile += bytesRead;
+                outFile.write(readBuffer, 0, bytesRead);
+            }*/
 
             /* Bruteforce password with thread */
-            BruteForcing bruteForcing = new BruteForcing(pwdLength, hashPwd);
+            BruteForcing bruteForcing = new BruteForcing(pwdLength, hashPwd, 0);
+            BruteForcing bruteForcing1 = new BruteForcing(pwdLength, hashPwd, 1);
 
             Thread thread = new Thread(bruteForcing);
+            Thread thread1 = new Thread(bruteForcing1);
+
             // Running thread
             thread.start();
+            thread1.start();
+
             // Waiting thread to stop processing before continuing instructions
             thread.join();
-
+            thread1.join();
+            System.out.println("Found password : " + BruteForcing.getPwd());
             SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcing.getPwd());
 
             CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);
@@ -103,12 +109,12 @@ public class ServerMain{
             outSocket.flush();
             FileManagement.sendFile(inDecrypted, outSocket);
             /*
-    int readCount;
-    byte[] buffer = new byte[64];
-    //read from the file and send it in the socket
-    while ((readCount = inDecrypted.read(buffer)) > 0){
-        outSocket.write(buffer, 0, readCount);
-    }*/
+            int readCount;
+            byte[] buffer = new byte[64];
+            //read from the file and send it in the socket
+            while ((readCount = inDecrypted.read(buffer)) > 0){
+                outSocket.write(buffer, 0, readCount);
+            }*/
 
             dataInputStream.close();
             inputStream.close();
@@ -123,13 +129,15 @@ class BruteForcing implements Runnable{
 
     private final int pwdLength;
     private final String hashPwd;
+    private final int isReversed;
 
     private static String pwd = "";
     private static boolean isFound = false;
 
-    public BruteForcing(int pwdLength, String hashPwd){
+    public BruteForcing(int pwdLength, String hashPwd, int isReversed){
         this.pwdLength = pwdLength;
         this.hashPwd = hashPwd;
+        this.isReversed = isReversed;
     }
 
     public static String getPwd() {
@@ -157,27 +165,45 @@ class BruteForcing implements Runnable{
         File dictionnary = new File("10k-most-common_filered.txt");
         BufferedReader br = new BufferedReader(new FileReader(dictionnary));
         while ((st = br.readLine()) != null){
+            System.out.println("dict: "+st);
             if(word.equals(passwordToHash(st))){
-                System.out.println(st);
-                return st;
+                pwd = st;
+                return "";
             }
         }
-        return null;
+        return "";
     }
 
-    private static void bruteForceAlphabet(String prefix, int mdpLength, String hash) {
-        for (char i = 'a'; i <= 'z'; i++) {
-            if (mdpLength == 0) {
-                System.out.println(prefix);
-                if(hash.equals(passwordToHash(prefix))) {
-                    pwd = prefix;
-                    isFound = true;
+    private static void bruteForceAlphabet(String prefix, int mdpLength, String hash, int isReversed) {
+        if (isReversed == 0){
+            for (char i = 'a'; i <= 'z'; i++) {
+                if (mdpLength == 0) {
+                    System.out.println("1 :" + prefix);
+                    if(hash.equals(passwordToHash(prefix))) {
+                        pwd = prefix;
+                        isFound = true;
+                    }
+                    return;
                 }
-                return;
+                String newPrefix = prefix + i;
+                if (!isFound)
+                    bruteForceAlphabet(newPrefix, mdpLength - 1,hash,isReversed);
             }
-            String newPrefix = prefix + i;
-            if (!isFound)
-                bruteForceAlphabet(newPrefix, mdpLength - 1,hash);
+        }
+        else{
+            for (char i = 'z'; i >= 'a'; i--) {
+                if (mdpLength == 0) {
+                    System.out.println("2 :" + prefix);
+                    if(hash.equals(passwordToHash(prefix))) {
+                        pwd = prefix;
+                        isFound = true;
+                    }
+                    return;
+                }
+                String newPrefix = prefix + i;
+                if (!isFound)
+                    bruteForceAlphabet(newPrefix, mdpLength - 1,hash,isReversed);
+            }
         }
     }
 
@@ -195,6 +221,6 @@ class BruteForcing implements Runnable{
     @Override
     public void run() {
         isFound = false;
-        bruteForceAlphabet("", pwdLength,hashPwd);
+        bruteForceAlphabet("", pwdLength,hashPwd,isReversed);
     }
 }

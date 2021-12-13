@@ -40,7 +40,7 @@ public class Main {
 
     public static void main(String[] args) {
         try{
-            String password = "test";
+            String password = "atat";
             SecretKey keyGenerated = CryptoUtils.getKeyFromPassword(password);
 
             File inputFile = new File("test_file.pdf");
