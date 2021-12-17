@@ -1,3 +1,11 @@
 *.pdf
 *.txt
 out/
+
+.idea/workspace.xml
+
+.idea/codeStyles/codeStyleConfig.xml
+
+.idea/shelf/Uncommitted_changes_before_Update_at_13_12_21__4_05_pm__Changes_.xml
+
+.idea/shelf/Uncommitted_changes_before_Update_at_13_12_21,_4_05_pm_\[Changes\]/shelved.patch
