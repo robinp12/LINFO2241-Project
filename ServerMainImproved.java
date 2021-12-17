@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class ServerMain{
+public class ServerMainImproved{
 
     /**
      * @param in Stream from which to read the request
@@ -78,22 +78,36 @@ public class ServerMain{
 
             // GET THE RESPONSE FROM THE CLIENT
             FileManagement.receiveFile(inputStream, outFile, fileLength);
+            /*
+            int readFromFile = 0;
+            int bytesRead = 0;
+            byte[] readBuffer = new byte[64];
+            System.out.println("[Server] File length: "+ fileLength);
+            while((readFromFile < fileLength)){
+                bytesRead = inputStream.read(readBuffer);
+                readFromFile += bytesRead;
+                outFile.write(readBuffer, 0, bytesRead);
+            }*/
 
             /* Bruteforce password */
-            BruteForcing bruteForcing = new BruteForcing(pwdLength, hashPwd);
+            BruteForcingImproved bruteForcing = new BruteForcingImproved(pwdLength, hashPwd, 0);
+            BruteForcingImproved bruteForcing1 = new BruteForcingImproved(pwdLength, hashPwd, 1);
 
-            // Put method in a thread
+            // Put method in threads
             Thread thread = new Thread(bruteForcing);
+            Thread thread1 = new Thread(bruteForcing1);
 
-            // Running thread
+            // Running threads
             thread.start();
+            thread1.start();
 
-            // Waiting thread to stop processing before continuing instructions
+            // Waiting threads to stop processing before continuing instructions
             thread.join();
+            thread1.join();
 
             // Password found
-            System.out.println("Found password : " + BruteForcing.getPwd());
-            SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcing.getPwd());
+            System.out.println("Found password : " + BruteForcingImproved.getPwd());
+            SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcingImproved.getPwd());
 
             CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);
 
@@ -102,6 +116,13 @@ public class ServerMain{
             outSocket.writeLong(decryptedFile.length());
             outSocket.flush();
             FileManagement.sendFile(inDecrypted, outSocket);
+            /*
+            int readCount;
+            byte[] buffer = new byte[64];
+            //read from the file and send it in the socket
+            while ((readCount = inDecrypted.read(buffer)) > 0){
+                outSocket.write(buffer, 0, readCount);
+            }*/
 
             // Close stream and socket
             dataInputStream.close();
@@ -113,17 +134,19 @@ public class ServerMain{
     }
 }
 
-class BruteForcing implements Runnable{
+class BruteForcingImproved implements Runnable{
 
     private final int pwdLength;
     private final String hashPwd;
+    private final int isReversed;
 
     private static String pwd = "";
     private static boolean isFound = false;
 
-    public BruteForcing(int pwdLength, String hashPwd){
+    public BruteForcingImproved(int pwdLength, String hashPwd, int isReversed){
         this.pwdLength = pwdLength;
         this.hashPwd = hashPwd;
+        this.isReversed = isReversed;
     }
 
     public static String getPwd() {
@@ -146,20 +169,52 @@ class BruteForcing implements Runnable{
         return generatedPassword;
     }
 
-    // Brute force method in alphabet order A to Z
-    private static void bruteForceAlphabet(String prefix, int mdpLength, String hash) {
-        for (char i = 'a'; i <= 'z'; i++) {
-            if (mdpLength == 0) {
-                System.out.println("1 :" + prefix);
-                if(hash.equals(passwordToHash(prefix))) {
-                    pwd = prefix;
-                    isFound = true;
-                }
-                return;
+    // Brute force method by itering over a list of password
+    private static String bruteForceDictionnary(String word) throws IOException {
+        String st;
+        File dictionnary = new File("10k-most-common_filered.txt");
+        BufferedReader br = new BufferedReader(new FileReader(dictionnary));
+        while ((st = br.readLine()) != null){
+            System.out.println("dict: "+st);
+            if(word.equals(passwordToHash(st))){
+                pwd = st;
+                return "";
             }
-            String newPrefix = prefix + i;
-            if (!isFound)
-                bruteForceAlphabet(newPrefix, mdpLength - 1,hash);
+        }
+        return "";
+    }
+
+    // Brute force method in alphabet order A-Z or Z-A
+    private static void bruteForceAlphabet(String prefix, int mdpLength, String hash, int isReversed) {
+        if (isReversed == 0){
+            for (char i = 'a'; i <= 'z'; i++) {
+                if (mdpLength == 0) {
+                    System.out.println("1 :" + prefix);
+                    if(hash.equals(passwordToHash(prefix))) {
+                        pwd = prefix;
+                        isFound = true;
+                    }
+                    return;
+                }
+                String newPrefix = prefix + i;
+                if (!isFound)
+                    bruteForceAlphabet(newPrefix, mdpLength - 1,hash,isReversed);
+            }
+        }
+        else{
+            for (char i = 'z'; i >= 'a'; i--) {
+                if (mdpLength == 0) {
+                    System.out.println("2 :" + prefix);
+                    if(hash.equals(passwordToHash(prefix))) {
+                        pwd = prefix;
+                        isFound = true;
+                    }
+                    return;
+                }
+                String newPrefix = prefix + i;
+                if (!isFound)
+                    bruteForceAlphabet(newPrefix, mdpLength - 1,hash,isReversed);
+            }
         }
     }
 
@@ -177,6 +232,6 @@ class BruteForcing implements Runnable{
     @Override
     public void run() {
         isFound = false;
-        bruteForceAlphabet("", pwdLength,hashPwd);
+        bruteForceAlphabet("", pwdLength,hashPwd,isReversed);
     }
 }
