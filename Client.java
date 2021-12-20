@@ -15,38 +15,66 @@ public class Client{
     private final String host;
     private final int port;
     private final String filename;
+    private final String printfile;
     private final int minPasswordLength;
     private final int maxPasswordLength;
 
-    public Client(int n, String host, int port, String filename, int minPasswordLength, int maxPasswordLength){
+    public Client(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
         this.N = n;
         this.host = host;
         this.port = port;
         this.filename = filename;
+        this.printfile = printfile;
         this.minPasswordLength = minPasswordLength;
         this.maxPasswordLength = maxPasswordLength;
     }
 
     public void launch(){
-        //TODO generate threads, thread-pool and launch threads
+        Run run = new Run(N, host, port, filename, printfile, minPasswordLength, maxPasswordLength);
+        Thread[] threadpool = new Thread[this.N];
+        for (int i = 0; i < this.N; i++){threadpool[i] = new Thread(run);}
+        for (int i = 0; i < N; i++){threadpool[i].start();}
+        for (int i = 0; i < N; i++){
+            try {threadpool[i].join();}
+            catch (InterruptedException e){e.printStackTrace();}
+        }
+    }
+}
+
+class Run implements Runnable{
+
+    private final int N;
+    private final String host;
+    private final int port;
+    private final String filename;
+    private final String printfile;
+    private final int minPasswordLength;
+    private final int maxPasswordLength;
+
+    Run(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
+        N = n;
+        this.host = host;
+        this.port = port;
+        this.filename = filename;
+        this.printfile = printfile;
+        this.minPasswordLength = minPasswordLength;
+        this.maxPasswordLength = maxPasswordLength;
     }
 
     private String generatePassword(int n){
         StringBuilder password = new StringBuilder();
-        for (int i = 0; i < n; i++){
-            password.append(getRandomNumber('a', 'z'));
-        }
+        for (int i = 0; i < n; i++){password.append((char) ('a' + getRandomNumber(0, 26)));}
+        System.out.println(password);
         return password.toString();
     }
 
-    private int getRandomNumber(int min, int max){
-        return (int) ((Math.random() * (max - min)) + min);
-    }
+    private int getRandomNumber(int min, int max){return (int) ((Math.random() * (max - min)) + min);}
 
-    private void thread(String printFile){
+    public void run(){
         long responseTime = -1;
+        int passwordLength = -1;
         try {
-            int passwordLength = getRandomNumber(minPasswordLength, maxPasswordLength);
+            passwordLength = getRandomNumber(minPasswordLength, maxPasswordLength);
             String password = generatePassword(passwordLength);
             SecretKey keyGenerated = CryptoUtils.getKeyFromPassword(password);
 
@@ -57,7 +85,7 @@ public class Client{
             // This is an example to help you create your request
             CryptoUtils.encryptFile(keyGenerated, inputFile, encryptedFile);
 
-            System.out.println("Encrypted file length: " + encryptedFile.length());
+//            System.out.println("Encrypted file length: " + encryptedFile.length());
 
             // Creating socket to connect to server (in this example it runs on the localhost on port 3333)
             Socket socket = new Socket(host, port);
@@ -82,10 +110,10 @@ public class Client{
             // GET THE RESPONSE FROM THE SERVER
             OutputStream outFile = new FileOutputStream(decryptedClient);
             long fileLengthServer = inSocket.readLong();
-            System.out.println("Length from the server: " + fileLengthServer);
+//            System.out.println("Length from the server: " + fileLengthServer);
             FileManagement.receiveFile(inSocket, outFile, fileLengthServer);
             long end = System.currentTimeMillis();
-            responseTime = start - end;
+            responseTime = end - start;
 
             out.close();
             outSocket.close();
@@ -93,25 +121,23 @@ public class Client{
             inFile.close();
             inSocket.close();
             socket.close();
-        } catch (IOException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidKeySpecException e){
+        } catch (IOException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException
+                | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidKeySpecException e){
             e.printStackTrace();
         }
         BufferedWriter writer = null;
         try {
-            File print = new File(printFile);
+            File print = new File(printfile);
 
             writer = new BufferedWriter(new FileWriter(print, true));
-            writer.write(String.format("%s", responseTime));//TODO print correctly in file
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
+            writer.write(String.format("%s, %s, %s\n", this.N, responseTime, passwordLength));
+        } catch (Exception e){e.printStackTrace();}
+        finally {
             try {
                 // Close the writer regardless of what happens...
                 assert writer != null;
                 writer.close();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            } catch (Exception e){e.printStackTrace();}
         }
     }
 }

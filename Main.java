@@ -49,7 +49,7 @@ public class Main {
 
             // This is an example to help you create your request
             CryptoUtils.encryptFile(keyGenerated, inputFile, encryptedFile);
-            System.out.println("Encrypted file length: " + encryptedFile.length());
+//            System.out.println("Encrypted file length: " + encryptedFile.length());
 
 
             // Creating socket to connect to server (in this example it runs on the localhost on port 3333)
@@ -82,7 +82,7 @@ public class Main {
             // GET THE RESPONSE FROM THE SERVER
             OutputStream outFile = new FileOutputStream(decryptedClient);
             long fileLengthServer = inSocket.readLong();
-            System.out.println("Length from the server: "+ fileLengthServer);
+//            System.out.println("Length from the server: "+ fileLengthServer);
             FileManagement.receiveFile(inSocket, outFile, fileLengthServer);
             /*
             int readFromSocket = 0;
@@ -100,6 +100,9 @@ public class Main {
             inFile.close();
             inSocket.close();
             socket.close();
+
+            Client cli = new Client(2, "localhost", 3333, "test_file.pdf", "printfile.txt", 1, 7);
+            cli.launch();
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidAlgorithmParameterException |
                 NoSuchPaddingException | IllegalBlockSizeException | IOException | BadPaddingException |
