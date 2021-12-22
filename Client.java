@@ -124,6 +124,8 @@ class Run implements Runnable{
             inFile.close();
             inSocket.close();
             socket.close();
+            encryptedFile.delete();
+            decryptedClient.delete();
         } catch (IOException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException
                 | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidKeySpecException e){
             e.printStackTrace();

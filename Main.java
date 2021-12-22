@@ -39,76 +39,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        try{
-            String password = "atat";
-            SecretKey keyGenerated = CryptoUtils.getKeyFromPassword(password);
-
-            File inputFile = new File("test_file.pdf");
-            File encryptedFile = new File("test_file-encrypted-client.pdf");
-            File decryptedClient = new File("test_file-decrypted-client.pdf");
-
-            // This is an example to help you create your request
-            CryptoUtils.encryptFile(keyGenerated, inputFile, encryptedFile);
-//            System.out.println("Encrypted file length: " + encryptedFile.length());
-
-
-            // Creating socket to connect to server (in this example it runs on the localhost on port 3333)
-            Socket socket = new Socket("localhost", 3333);
-
-            // For any I/O operations, a stream is needed where the data are read from or written to. Depending on
-            // where the data must be sent to or received from, different kind of stream are used.
-            OutputStream outSocket = socket.getOutputStream();
-            DataOutputStream out = new DataOutputStream(outSocket);
-            InputStream inFile = new FileInputStream(encryptedFile);
-            DataInputStream inSocket = new DataInputStream(socket.getInputStream());
-
-
-            // SEND THE PROCESSING INFORMATION AND FILE
-            byte[] hashPwd = hashSHA1(password);
-            int pwdLength = password.length();
-            long fileLength = encryptedFile.length();
-            sendRequest(out, hashPwd, pwdLength, fileLength);
-            out.flush();
-
-            FileManagement.sendFile(inFile, out);
-            /*
-            int readCount;
-            byte[] buffer = new byte[64];
-            //read from the file and send it in the socket
-            while ((readCount = inFile.read(buffer)) > 0){
-                out.write(buffer, 0, readCount);
-            }*/
-
-            // GET THE RESPONSE FROM THE SERVER
-            OutputStream outFile = new FileOutputStream(decryptedClient);
-            long fileLengthServer = inSocket.readLong();
-//            System.out.println("Length from the server: "+ fileLengthServer);
-            FileManagement.receiveFile(inSocket, outFile, fileLengthServer);
-            /*
-            int readFromSocket = 0;
-            int byteRead;
-            byte[] readBuffer = new byte[64];
-            while(readFromSocket < fileLengthServer){
-                byteRead = inSocket.read(readBuffer);
-                readFromSocket += byteRead;
-                outFile.write(readBuffer, 0, byteRead);
-            }*/
-
-            out.close();
-            outSocket.close();
-            outFile.close();
-            inFile.close();
-            inSocket.close();
-            socket.close();
-
-            Client cli = new Client(2, "localhost", 3333, "test_file.pdf", "printfile.txt", 1, 5);
-            cli.launch();
-
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidAlgorithmParameterException |
-                NoSuchPaddingException | IllegalBlockSizeException | IOException | BadPaddingException |
-                InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
+        Client cli = new Client(6, "localhost", 3333, "test_file.pdf", "printfile.txt", 1, 5);
+        cli.launch();
     }
 }
