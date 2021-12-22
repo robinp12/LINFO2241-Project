@@ -42,11 +42,6 @@ public class ServerMain{
             InvalidKeySpecException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InterruptedException {
 
-        // Template decrypted file
-        File decryptedFile = new File("test_file-decrypted-server.pdf");
-        // Template file from client
-        File networkFile = new File("temp-server.pdf");
-
         // Server initialization
         ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");
@@ -64,10 +59,7 @@ public class ServerMain{
             // Stream to write response to socket
             DataOutputStream outSocket = new DataOutputStream(socket.getOutputStream());
 
-            // Stream to write the file to decrypt
-            OutputStream outFile = new FileOutputStream(networkFile);
-
-            // Read datas from client
+            // Read data from client
             Request request = readRequest(dataInputStream);
             long fileLength = request.getLengthFile();
             int pwdLength = request.getLengthPwd();
@@ -75,6 +67,14 @@ public class ServerMain{
             System.out.println("fileLength: " + fileLength);
             System.out.println("pwdLength: " + pwdLength);
             System.out.println("hashPwd: " + hashPwd);
+
+            // Template decrypted file
+            File decryptedFile = new File("test_file-decrypted-server" + hashPwd + ".pdf");
+            // Template file from client
+            File networkFile = new File("temp-server" + hashPwd + ".pdf");
+
+            // Stream to write the file to decrypt
+            OutputStream outFile = new FileOutputStream(networkFile);
 
             // GET THE RESPONSE FROM THE CLIENT
             FileManagement.receiveFile(inputStream, outFile, fileLength);
@@ -109,6 +109,8 @@ public class ServerMain{
             inDecrypted.close();
             outFile.close();
             socket.close();
+            decryptedFile.delete();
+            networkFile.delete();
         }
     }
 }

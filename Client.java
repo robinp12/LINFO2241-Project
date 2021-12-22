@@ -71,6 +71,9 @@ class Run implements Runnable{
     private int getRandomNumber(int min, int max){return (int) ((Math.random() * (max - min)) + min);}
 
     public void run(){
+        int wait = getRandomNumber(0, 10000);
+        try {Thread.sleep(wait);}
+        catch (InterruptedException e){e.printStackTrace();}
         long responseTime = -1;
         int passwordLength = -1;
         try {

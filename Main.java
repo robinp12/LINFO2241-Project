@@ -101,7 +101,7 @@ public class Main {
             inSocket.close();
             socket.close();
 
-            Client cli = new Client(2, "localhost", 3333, "test_file.pdf", "printfile.txt", 1, 7);
+            Client cli = new Client(2, "localhost", 3333, "test_file.pdf", "printfile.txt", 1, 5);
             cli.launch();
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidAlgorithmParameterException |
