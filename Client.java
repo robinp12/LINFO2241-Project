@@ -11,7 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 
 class Client implements Runnable{
 
-    private final int N;
+    private final int n;
     private final String host;
     private final int port;
     private final String filename;
@@ -20,7 +20,7 @@ class Client implements Runnable{
     private final int maxPasswordLength;
 
     Client(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
-        N = n;
+        this.n = n;
         this.host = host;
         this.port = port;
         this.filename = filename;
@@ -32,7 +32,6 @@ class Client implements Runnable{
     private String generatePassword(int n){
         StringBuilder password = new StringBuilder();
         for (int i = 0; i < n; i++){password.append((char) ('a' + getRandomNumber(0, 26)));}
-        System.out.println(password);
         return password.toString();
     }
 
@@ -52,8 +51,8 @@ class Client implements Runnable{
 
             File inputFile = new File(filename);
             fileLength = inputFile.length();
-            File encryptedFile = new File("test_file-encrypted-client.pdf");
-            File decryptedClient = new File("test_file-decrypted-client.pdf");
+            File encryptedFile = new File("client\\test_file-encrypted-client"+n+".pdf");
+            File decryptedClient = new File("client\\test_file-decrypted-client"+n+".pdf");
 
             // This is an example to help you create your request
             CryptoUtils.encryptFile(keyGenerated, inputFile, encryptedFile);
@@ -75,6 +74,7 @@ class Client implements Runnable{
             byte[] hashPwd = Main.hashSHA1(password);
             int pwdLength = password.length();
             long file_Length = encryptedFile.length();
+            System.out.println(n + " Envoyé");
             Main.sendRequest(out, hashPwd, pwdLength, file_Length);
             out.flush();
 
@@ -83,8 +83,10 @@ class Client implements Runnable{
             // GET THE RESPONSE FROM THE SERVER
             OutputStream outFile = new FileOutputStream(decryptedClient);
             long fileLengthServer = inSocket.readLong();
-//            System.out.println("Length from the server: " + fileLengthServer);
             FileManagement.receiveFile(inSocket, outFile, fileLengthServer);
+            System.out.println("Décrypté et recu");
+
+//            System.out.println("Length from the server: " + fileLengthServer);
             long end = System.currentTimeMillis();
             responseTime = end - start;
 
@@ -95,7 +97,6 @@ class Client implements Runnable{
             inSocket.close();
             socket.close();
             encryptedFile.delete();
-            decryptedClient.delete();
         } catch (IOException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException
                 | NoSuchAlgorithmException | BadPaddingException | InvalidKeyException | InvalidKeySpecException e){
             e.printStackTrace();
@@ -105,7 +106,7 @@ class Client implements Runnable{
             File print = new File(printfile);
 
             writer = new BufferedWriter(new FileWriter(print, true));
-            writer.write(String.format("%s, %s, %s, %s\n", this.N, fileLength, responseTime, passwordLength));
+            writer.write(String.format("%s, %s, %s\n", fileLength, responseTime, passwordLength));
         } catch (Exception e){e.printStackTrace();}
         finally {
             try {

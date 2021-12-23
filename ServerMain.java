@@ -18,18 +18,31 @@ public class ServerMain{
         // Server initialization
         ServerSocket ss = new ServerSocket(3333,10);
         System.out.println("Waiting connection");
+        int i = 0;
 
         // Loop to receive multiple request from clients
         while (true) {
-            synchronized (ss) {
+            // Template decrypted file
+            File decryptedFile = new File("server\\test_file-decrypted-server"+i+".pdf");
+            // Template file from client
+            File networkFile = new File("server\\temp-server"+i+".pdf");
+            i++;
 
-                ClientHandler CH = new ClientHandler(ss);
+            Socket socket = null;
+            try {
+                // Create socket
+                socket = ss.accept();
+                System.out.println("Connection from: " + socket);
 
+                ClientHandler CH = new ClientHandler(socket,i,decryptedFile,networkFile);
                 Thread thread = new Thread(CH);
                 thread.start();
                 thread.join();
 
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
+            socket.close();
         }
     }
 }
@@ -102,11 +115,17 @@ class BruteForcing implements Runnable{
 }
 class ClientHandler implements Runnable{
 
-    private final ServerSocket ss;
+    private final Socket ss;
+    private final File decryptedFile;
+    private final File networkFile;
+    private int i;
 
-    public ClientHandler(ServerSocket ss) {
-
+    public ClientHandler(Socket ss, int i, File decryptedFile, File networkFile) {
+        this.i = i;
         this.ss = ss;
+
+        this.decryptedFile = decryptedFile;
+        this.networkFile = networkFile;
     }
 
     /**
@@ -147,34 +166,27 @@ class ClientHandler implements Runnable{
      * @see Thread#run()
      */
     @Override
-    public void run() {
+    public synchronized void run() {
 
-        // Template decrypted file
-        File decryptedFile = new File("server\\test_file-decrypted-server.pdf");
-        // Template file from client
-        File networkFile = new File("server\\temp-server.pdf");
-
-        Socket socket = null;
+        // Stream to read request from socket
+        InputStream inputStream = null;
         try {
-            // Create socket
-            socket = ss.accept();
-            System.out.println("Connection from: " + socket);
+            inputStream = ss.getInputStream();
 
-            // Stream to read request from socket
-            InputStream inputStream = socket.getInputStream();
             DataInputStream dataInputStream = new DataInputStream(inputStream);
 
             // Stream to write response to socket
-            DataOutputStream outSocket = new DataOutputStream(socket.getOutputStream());
+            DataOutputStream outSocket = new DataOutputStream(ss.getOutputStream());
 
             // Read data from client
             Request request = readRequest(dataInputStream);
+            System.out.println(i + " Recu");
             long fileLength = request.getLengthFile();
             int pwdLength = request.getLengthPwd();
             String hashPwd = arrayHashToString(request.getHashPassword());
             //System.out.println("fileLength: " + fileLength);
             //System.out.println("pwdLength: " + pwdLength);
-            System.out.println("hashPwd: " + hashPwd);
+            //System.out.println("hashPwd: " + hashPwd);
 
 
             // Stream to write the file to decrypt
@@ -197,7 +209,6 @@ class ClientHandler implements Runnable{
 
             // Password found
             System.out.println("Found password : " + BruteForcing.getPwd());
-            System.out.println();
             SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcing.getPwd());
 
             CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);
@@ -206,6 +217,8 @@ class ClientHandler implements Runnable{
             InputStream inDecrypted = new FileInputStream(decryptedFile);
             outSocket.writeLong(decryptedFile.length());
             outSocket.flush();
+            System.out.println(i + " Envoyé");
+            System.out.println();
             FileManagement.sendFile(inDecrypted, outSocket);
 
             // Close stream and socket
@@ -213,12 +226,11 @@ class ClientHandler implements Runnable{
             inputStream.close();
             inDecrypted.close();
             outFile.close();
-            socket.close();
-        } catch (IOException | InterruptedException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeySpecException | BadPaddingException | InvalidKeyException e) {
-
+            networkFile.delete();
+            decryptedFile.delete();
+        } catch (IOException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | InterruptedException | BadPaddingException e) {
             e.printStackTrace();
         }
-        networkFile.delete();
-        decryptedFile.delete();
+
     }
 }

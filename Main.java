@@ -33,9 +33,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ExecutorService executor = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 2; i++) {
-            Runnable cli = new Client(1, "localhost", 3333, "test_file.pdf", "printfile.txt", 2, 5);
+        int nb_client = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(nb_client);
+        for (int i = 0; i < nb_client; i++) {
+            Runnable cli = new Client(i, "localhost", 3333, "test_file.pdf", "printfile.txt", 3, 5);
             executor.execute(cli);
         }
         executor.shutdown();
