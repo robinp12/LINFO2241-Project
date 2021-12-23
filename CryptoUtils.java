@@ -31,7 +31,7 @@ public class CryptoUtils {
      * @param inputFile File to decrypt
      * @param outputFile File where the decrypted result is written
      */
-    public static void decryptFile( SecretKey key,
+    public synchronized static void decryptFile( SecretKey key,
                                    File inputFile, File outputFile) throws NoSuchPaddingException,
             IllegalBlockSizeException, IOException, NoSuchAlgorithmException,
             BadPaddingException, InvalidKeyException {

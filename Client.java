@@ -9,7 +9,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class Client{
+class Client implements Runnable{
 
     private final int N;
     private final String host;
@@ -19,39 +19,7 @@ public class Client{
     private final int minPasswordLength;
     private final int maxPasswordLength;
 
-    public Client(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
-        this.N = n;
-        this.host = host;
-        this.port = port;
-        this.filename = filename;
-        this.printfile = printfile;
-        this.minPasswordLength = minPasswordLength;
-        this.maxPasswordLength = maxPasswordLength;
-    }
-
-    public void launch(){
-        Run run = new Run(N, host, port, filename, printfile, minPasswordLength, maxPasswordLength);
-        Thread[] threadpool = new Thread[this.N];
-        for (int i = 0; i < this.N; i++){threadpool[i] = new Thread(run);}
-        for (int i = 0; i < N; i++){threadpool[i].start();}
-        for (int i = 0; i < N; i++){
-            try {threadpool[i].join();}
-            catch (InterruptedException e){e.printStackTrace();}
-        }
-    }
-}
-
-class Run implements Runnable{
-
-    private final int N;
-    private final String host;
-    private final int port;
-    private final String filename;
-    private final String printfile;
-    private final int minPasswordLength;
-    private final int maxPasswordLength;
-
-    Run(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
+    Client(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
         N = n;
         this.host = host;
         this.port = port;
@@ -68,20 +36,22 @@ class Run implements Runnable{
         return password.toString();
     }
 
-    private int getRandomNumber(int min, int max){return (int) ((Math.random() * (max - min)) + min);}
+    static int getRandomNumber(int min, int max){return (int) ((Math.random() * (max - min)) + min);}
 
     public void run(){
         int wait = getRandomNumber(0, 10000);
-        try {Thread.sleep(wait);}
-        catch (InterruptedException e){e.printStackTrace();}
+        //try {Thread.sleep(wait);}
+        //catch (InterruptedException e){e.printStackTrace();}
         long responseTime = -1;
         int passwordLength = -1;
+        long fileLength = -1;
         try {
             passwordLength = getRandomNumber(minPasswordLength, maxPasswordLength);
             String password = generatePassword(passwordLength);
             SecretKey keyGenerated = CryptoUtils.getKeyFromPassword(password);
 
             File inputFile = new File(filename);
+            fileLength = inputFile.length();
             File encryptedFile = new File("test_file-encrypted-client.pdf");
             File decryptedClient = new File("test_file-decrypted-client.pdf");
 
@@ -104,8 +74,8 @@ class Run implements Runnable{
             long start = System.currentTimeMillis();
             byte[] hashPwd = Main.hashSHA1(password);
             int pwdLength = password.length();
-            long fileLength = encryptedFile.length();
-            Main.sendRequest(out, hashPwd, pwdLength, fileLength);
+            long file_Length = encryptedFile.length();
+            Main.sendRequest(out, hashPwd, pwdLength, file_Length);
             out.flush();
 
             FileManagement.sendFile(inFile, out);
@@ -135,7 +105,7 @@ class Run implements Runnable{
             File print = new File(printfile);
 
             writer = new BufferedWriter(new FileWriter(print, true));
-            writer.write(String.format("%s, %s, %s\n", this.N, responseTime, passwordLength));
+            writer.write(String.format("%s, %s, %s, %s\n", this.N, fileLength, responseTime, passwordLength));
         } catch (Exception e){e.printStackTrace();}
         finally {
             try {

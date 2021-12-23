@@ -1,15 +1,9 @@
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import java.io.*;
-import java.net.Socket;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Main {
@@ -39,7 +33,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Client cli = new Client(6, "localhost", 3333, "test_file.pdf", "printfile.txt", 1, 5);
-        cli.launch();
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < 2; i++) {
+            Runnable cli = new Client(1, "localhost", 3333, "test_file.pdf", "printfile.txt", 2, 5);
+            executor.execute(cli);
+        }
+        executor.shutdown();
     }
 }
