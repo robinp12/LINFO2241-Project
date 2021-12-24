@@ -12,6 +12,7 @@ import java.security.spec.InvalidKeySpecException;
 class Client implements Runnable{
 
     private final int n;
+    private int clientNumber;
     private final String host;
     private final int port;
     private final String filename;
@@ -19,8 +20,9 @@ class Client implements Runnable{
     private final int minPasswordLength;
     private final int maxPasswordLength;
 
-    Client(int n, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
+    Client(int n, int clientNumber, String host, int port, String filename, String printfile, int minPasswordLength, int maxPasswordLength){
         this.n = n;
+        this.clientNumber = clientNumber;
         this.host = host;
         this.port = port;
         this.filename = filename;
@@ -39,8 +41,8 @@ class Client implements Runnable{
 
     public void run(){
         int wait = getRandomNumber(0, 10000);
-        //try {Thread.sleep(wait);}
-        //catch (InterruptedException e){e.printStackTrace();}
+        try {Thread.sleep(wait);}
+        catch (InterruptedException e){e.printStackTrace();}
         long responseTime = -1;
         int passwordLength = -1;
         long fileLength = -1;
@@ -106,7 +108,7 @@ class Client implements Runnable{
             File print = new File(printfile);
 
             writer = new BufferedWriter(new FileWriter(print, true));
-            writer.write(String.format("%s, %s, %s\n", fileLength, responseTime, passwordLength));
+            if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n", this.clientNumber, fileLength, responseTime, passwordLength));}
         } catch (Exception e){e.printStackTrace();}
         finally {
             try {

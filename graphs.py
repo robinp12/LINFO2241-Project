@@ -8,41 +8,58 @@ from scipy.interpolate import CubicSpline as CS
 from numpy import *
 import matplotlib.pyplot as plt
 
-files = ["data_thinkers.csv", "data_producersconsumers.csv", "data_readerswriters.csv"]
-titles = ["Thinkers' algorithm\nExecution time", "Producers-consumers' algorithm\nExecution time", "Readers-writers' algorithm\nExecution time"]
-x_axis = 'Thread number'
+files = ["printfile.txt", "printfile_wait.txt"]
+titles = ["Server response time"]
+x_axis = 'Number of clients'
 y_axis = 'Execution time (ms)'
-names = ["thinkers", "prodcons", "readwrite"]
+names = ["server"]
 
 
-Argument_processing = 1000*array([0.000113, 0.000106, 0.000050])
-Socket_creation = 1000*array([0.000351, 0.000374, 0.000295])
-Poll_initialization = 1000*array([0.000001, 0.000001, 0.000000])
-Process_packet_time = 1000*array([0.000013, 0.000016, 0.000003,  0.000002, 0.000002, 0.000025, 0.000027, 0.000007, 0.000022, 0.000006, 0.000015, 0.000017, 0.000004, 0.000004, 0.000009])
-Reception_window_time = 1000*array([0.000028, 0.000060, 0.000017, 0.000014, 0.000057, 0.000085, 0.000057, 0.000062, 0.000041, 0.000062, 0.000036, 0.000028])
-Send_loop_time = 1000*array([0.000260, 0.000600, 0.000369])
-Receiver_time = 1000*array([0.000774, 0.001252, 0.000807])
-name = ["Argument processing", "Socket creation", "Poll initialization", "Process packet_time", "Reception window time", "Send_loop time", "Receiver time"]
-tit = "Receiver performances on truncating network"
-toprint = [Argument_processing, Socket_creation, Poll_initialization, Process_packet_time, Reception_window_time, Send_loop_time, Receiver_time]
+# Argument_processing = 1000*array([0.000113, 0.000106, 0.000050])
+# Socket_creation = 1000*array([0.000351, 0.000374, 0.000295])
+# Poll_initialization = 1000*array([0.000001, 0.000001, 0.000000])
+# Process_packet_time = 1000*array([0.000013, 0.000016, 0.000003,  0.000002, 0.000002, 0.000025, 0.000027, 0.000007, 0.000022, 0.000006, 0.000015, 0.000017, 0.000004, 0.000004, 0.000009])
+# Reception_window_time = 1000*array([0.000028, 0.000060, 0.000017, 0.000014, 0.000057, 0.000085, 0.000057, 0.000062, 0.000041, 0.000062, 0.000036, 0.000028])
+# Send_loop_time = 1000*array([0.000260, 0.000600, 0.000369])
+# Receiver_time = 1000*array([0.000774, 0.001252, 0.000807])
+# name = ["Argument processing", "Socket creation", "Poll initialization", "Process packet_time", "Reception window time", "Send_loop time", "Receiver time"]
+# tit = "Receiver performances on truncating network"
+# toprint = [Argument_processing, Socket_creation, Poll_initialization, Process_packet_time, Reception_window_time, Send_loop_time, Receiver_time]
 
-def graph(title, y_axis, name, file):
-    with open(file) as f:
-        measures = f.read().splitlines()[1:]
+def graph(title, y_axis, name, file1, file2):
+    with open(file1) as f:
+        measures = f.read().splitlines()
     
-    data = {}
+    data1 = {}
+    data2 = {}
     
     for m in measures:
-        core, tim = m.split(" : ")
-        cores = int(core)
-        time = float(tim)
+        tn, fs, tim, pl = m.split(", ")
+        thread_number = int(tn)
+        file_length = int(fs)
+        time = int(tim)
+        password_length = int(pl)
     
-        l = data.get(cores, [])
+        l = data1.get(thread_number, [])
         l.append(time)
-        data[cores] = l
+        data1[thread_number] = l
+
+    with open(file2) as f:
+            measures = f.read().splitlines()
+
+        for m in measures:
+            tn, fs, tim, pl = m.split(", ")
+            thread_number = int(tn)
+            file_length = int(fs)
+            time = int(tim)
+            password_length = int(pl)
+
+            l = data2.get(thread_number, [])
+            l.append(time)
+            data2[thread_number] = l
     
-    x = list(data.keys())
-    y = [sum(v) / len(v) for v in data.values()]
+    x = list(data1.keys())
+    y = [sum(v) / len(v) for v in data1.values()]
 
     n = 0
     for v in toprint:

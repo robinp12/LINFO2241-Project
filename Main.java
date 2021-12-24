@@ -2,8 +2,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 public class Main {
@@ -33,12 +35,22 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        int nb_client = 10;
-        ExecutorService executor = Executors.newFixedThreadPool(nb_client);
-        for (int i = 0; i < nb_client; i++) {
-            Runnable cli = new Client(i, "localhost", 3333, "test_file.pdf", "printfile.txt", 3, 5);
+        for (int i = 1; i <= 7; i++){
+            ExecutorService executor = Executors.newFixedThreadPool(1);
+            Runnable cli = new Client(1, 1, "localhost", 3333, "test_file.pdf", "printfile_pass.txt", i, i);
             executor.execute(cli);
+            executor.shutdown();
         }
-        executor.shutdown();
+        while (true){
+            Scanner sc = new Scanner(System.in);
+            int k = sc.nextInt();
+            ExecutorService executor = Executors.newFixedThreadPool(k);
+            for (int i = 0; i < k; i++){
+                Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "printfile_wait.txt", 4, 4);
+                executor.execute(cli);
+            }
+            executor.shutdown();
+        }
+
     }
 }
