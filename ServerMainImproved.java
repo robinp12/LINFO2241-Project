@@ -48,7 +48,7 @@ public class ServerMainImproved{
         File networkFile = new File("temp-server.pdf");
 
         // Server initialization
-        ServerSocket ss = new ServerSocket(3333);
+        ServerSocket ss = new ServerSocket(3334);
         System.out.println("Waiting connection");
 
         // Loop to receive multiple request from clients

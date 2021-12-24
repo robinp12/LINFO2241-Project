@@ -35,15 +35,19 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        for (int i = 1; i <= 7; i++){
+        while(true){
+            Scanner sc = new Scanner(System.in);
+            int i = sc.nextInt();
+            if (i==-1){break;}
             ExecutorService executor = Executors.newFixedThreadPool(1);
-            Runnable cli = new Client(1, 1, "localhost", 3333, "test_file.pdf", "printfile_pass.txt", i, i);
+            Runnable cli = new Client(1, 1, "localhost", 3334, "test_file.pdf", "printfile_pass.txt", i, i);
             executor.execute(cli);
             executor.shutdown();
         }
         while (true){
             Scanner sc = new Scanner(System.in);
             int k = sc.nextInt();
+            if (k==-1){break;}
             ExecutorService executor = Executors.newFixedThreadPool(k);
             for (int i = 0; i < k; i++){
                 Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "printfile_wait.txt", 4, 4);

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy.polynomial.polynomial as poly
 from scipy.interpolate import CubicSpline as CS
 
-files = ["printfile.txt", "printfile_wait.txt"]
+files = ["printfile.txt", "printfile_wait.txt", ]
 titles = ["Server response time"]
 x_axis = 'Number of clients'
 y_axis = 'Execution time (ms)'
@@ -27,10 +27,15 @@ def get_data(dictionary, file):
 
 d1 = {}
 d2 = {}
+d3 = {}
+d4 = {}
 x3 = linspace(1, 100, 10000)
 
 get_data(d1, files[0])
 get_data(d2, files[1])
+get_data(d3, files[2])
+get_data(d4, files[4])
+
 
 x = list(d1.keys())
 y = [sum(v) / len(v) for v in d1.values()]
