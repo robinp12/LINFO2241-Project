@@ -2,11 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/graphs/empty" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CryptoUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ServerMainImproved.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMainImproved.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/password.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/password_opti.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server-client-delay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,14 +42,16 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JAVA" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/graphs" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\graphs" />
       <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project" />
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\server" />
     </key>
   </component>
   <component name="RunManager" selected="Application.ServerMain">
@@ -55,6 +64,13 @@
     </configuration>
     <configuration name="ServerMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ServerMain" />
+      <module name="LINFO2241-Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerMainImproved" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ServerMainImproved" />
       <module name="LINFO2241-Project" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -75,6 +91,7 @@
       <list>
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.ServerMain" />
+        <item itemvalue="Application.ServerMainImproved" />
       </list>
     </recent_temporary>
   </component>
@@ -102,7 +119,9 @@
       <workItem from="1639390281334" duration="1177000" />
       <workItem from="1639391521258" duration="3918000" />
       <workItem from="1639727154984" duration="101000" />
-      <workItem from="1640281804510" duration="8410000" />
+      <workItem from="1640281804510" duration="8754000" />
+      <workItem from="1640290657700" duration="221000" />
+      <workItem from="1640800865241" duration="10129000" />
     </task>
     <servers />
   </component>

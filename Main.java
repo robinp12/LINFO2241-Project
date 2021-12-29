@@ -35,22 +35,30 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        System.out.println("Enter a password size... (or -1 for pool of client)");
         while(true){
             Scanner sc = new Scanner(System.in);
+            //Only int input
+            while (!sc.hasNextInt()) sc.next();
             int i = sc.nextInt();
             if (i==-1){break;}
+            System.out.println("One password of length "+i +" generated");
             ExecutorService executor = Executors.newFixedThreadPool(1);
-            Runnable cli = new Client(1, 1, "localhost", 3334, "test_file.pdf", "printfile_pass.txt", i, i);
+            Runnable cli = new Client(1, 1, "localhost", 3333, "test_file.pdf", "graphs/onepassword.txt", i, i);
             executor.execute(cli);
             executor.shutdown();
         }
+        System.out.println("Enter number of client request... (or -1 to exit)");
         while (true){
             Scanner sc = new Scanner(System.in);
+            //Only int input
+            while (!sc.hasNextInt()) sc.next();
             int k = sc.nextInt();
             if (k==-1){break;}
             ExecutorService executor = Executors.newFixedThreadPool(k);
+            System.out.println("Pool of " + k + " clients generated");
             for (int i = 0; i < k; i++){
-                Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "printfile_wait.txt", 4, 4);
+                Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "graphs/poolpassword.txt", 4, 4);
                 executor.execute(cli);
             }
             executor.shutdown();

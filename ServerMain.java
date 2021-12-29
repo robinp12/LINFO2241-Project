@@ -3,6 +3,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.InvalidKeyException;
@@ -180,14 +181,9 @@ class ClientHandler implements Runnable{
 
             // Read data from client
             Request request = readRequest(dataInputStream);
-            System.out.println(i + " Recu");
             long fileLength = request.getLengthFile();
             int pwdLength = request.getLengthPwd();
             String hashPwd = arrayHashToString(request.getHashPassword());
-            //System.out.println("fileLength: " + fileLength);
-            //System.out.println("pwdLength: " + pwdLength);
-            //System.out.println("hashPwd: " + hashPwd);
-
 
             // Stream to write the file to decrypt
             OutputStream outFile = new FileOutputStream(networkFile);
@@ -208,18 +204,16 @@ class ClientHandler implements Runnable{
             thread.join();
 
             // Password found
-            System.out.println("Found password : " + BruteForcing.getPwd());
+            System.out.println("DECRYPTED " + i);
             SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcing.getPwd());
-
             CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);
 
             // Send the decryptedFile
             InputStream inDecrypted = new FileInputStream(decryptedFile);
             outSocket.writeLong(decryptedFile.length());
             outSocket.flush();
-            System.out.println(i + " Envoyé");
-            System.out.println();
             FileManagement.sendFile(inDecrypted, outSocket);
+            System.out.println("SENT "+ i);
 
             // Close stream and socket
             dataInputStream.close();

@@ -46,9 +46,11 @@ public class ServerMainImproved{
         File decryptedFile = new File("test_file-decrypted-server.pdf");
         // Template file from client
         File networkFile = new File("temp-server.pdf");
+        int i = 0;
+
 
         // Server initialization
-        ServerSocket ss = new ServerSocket(3334);
+        ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");
 
         // Loop to receive multiple request from clients
@@ -72,22 +74,9 @@ public class ServerMainImproved{
             long fileLength = request.getLengthFile();
             int pwdLength = request.getLengthPwd();
             String hashPwd = arrayHashToString(request.getHashPassword());
-            System.out.println("fileLength: " + fileLength);
-            System.out.println("pwdLength: " + pwdLength);
-            System.out.println("hashPwd: " + hashPwd);
 
             // GET THE RESPONSE FROM THE CLIENT
             FileManagement.receiveFile(inputStream, outFile, fileLength);
-            /*
-            int readFromFile = 0;
-            int bytesRead = 0;
-            byte[] readBuffer = new byte[64];
-            System.out.println("[Server] File length: "+ fileLength);
-            while((readFromFile < fileLength)){
-                bytesRead = inputStream.read(readBuffer);
-                readFromFile += bytesRead;
-                outFile.write(readBuffer, 0, bytesRead);
-            }*/
 
             /* Bruteforce password */
             BruteForcingImproved bruteForcing = new BruteForcingImproved(pwdLength, hashPwd, 0);
@@ -106,7 +95,7 @@ public class ServerMainImproved{
             thread1.join();
 
             // Password found
-            System.out.println("Found password : " + BruteForcingImproved.getPwd());
+            System.out.println("DECRYPTED " + i);
             SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcingImproved.getPwd());
 
             CryptoUtils.decryptFile(serverKey, networkFile, decryptedFile);
@@ -116,14 +105,9 @@ public class ServerMainImproved{
             outSocket.writeLong(decryptedFile.length());
             outSocket.flush();
             FileManagement.sendFile(inDecrypted, outSocket);
-            /*
-            int readCount;
-            byte[] buffer = new byte[64];
-            //read from the file and send it in the socket
-            while ((readCount = inDecrypted.read(buffer)) > 0){
-                outSocket.write(buffer, 0, readCount);
-            }*/
+            System.out.println("SENT "+ i);
 
+            i++;
             // Close stream and socket
             dataInputStream.close();
             inputStream.close();
@@ -189,7 +173,6 @@ class BruteForcingImproved implements Runnable{
         if (isReversed == 0){
             for (char i = 'a'; i <= 'z'; i++) {
                 if (mdpLength == 0) {
-                    System.out.println("1 :" + prefix);
                     if(hash.equals(passwordToHash(prefix))) {
                         pwd = prefix;
                         isFound = true;
@@ -204,7 +187,6 @@ class BruteForcingImproved implements Runnable{
         else{
             for (char i = 'z'; i >= 'a'; i--) {
                 if (mdpLength == 0) {
-                    System.out.println("2 :" + prefix);
                     if(hash.equals(passwordToHash(prefix))) {
                         pwd = prefix;
                         isFound = true;
