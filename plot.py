@@ -8,7 +8,7 @@ titles = ["Server response time"]
 x_axis = 'Number of clients'
 X_axis2 = 'Password length'
 y_axis = 'Execution time (ms)'
-names = ["server", "server-client-delay", "password"]
+names = ["server", "server-client-delay", "password", "password_opti"]
 
 
 def get_data(dictionary, file):
@@ -40,15 +40,21 @@ get_data(d4, files[3])
 
 
 x = list(d1.keys())
-print(d1.values())
-for x in d1.values():
-    print(x)
-y = [sum(tim) / len(tim) for (fs, tim, pl) in [c for c in d1.values()]]
-plt.stem(x, y, label='Clients sending requests at the same time')
+y = []
+for key in d1.keys():
+    length = 0
+    sum = 0
+    for measure in d1.get(key):
+        (fs, tim, pl) = measure
+        sum += tim
+        length += 1
+    y.append(sum/length)
+plt.plot(x, y, label='Clients sending requests at the same time')
 
 
 plt.title(titles[0])
 plt.ylabel(y_axis)
+plt.xlabel(x_axis)
 plt.ylim(bottom=0)
 plt.grid()
 # plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
@@ -56,29 +62,55 @@ plt.savefig(names[0] + '.png', bbox_inches='tight')
 plt.show()
 
 x = list(d2.keys())
-y = [sum(tim) / len(tim) for (fs, tim, pl) in d2.values()]
-plt.stem(x, y, label='Clients requests delayed')
+y = []
+for key in d2.keys():
+    length = 0
+    sum = 0
+    for measure in d2.get(key):
+        (fs, tim, pl) = measure
+        sum += tim
+        length += 1
+    y.append(sum/length)
+plt.plot(x, y, label='Clients requests delayed')
 
 
 plt.title(titles[0])
 plt.ylabel(y_axis)
+plt.xlabel(x_axis)
 plt.ylim(bottom=0)
 plt.grid()
 # plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
 plt.savefig(names[1] + '.png', bbox_inches='tight')
 plt.show()
 
-y = [pl for (fs, tim, pl) in d3.values()]
-y = [sum(tim) / len(tim) for (fs, tim, pl) in d3.values()]
-plt.plot(x, y, label='Basic server')
-y = [pl for (fs, tim, pl) in d4.values()]
-y = [sum(tim) / len(tim) for (fs, tim, pl) in d4.values()]
-plt.plot(x, y, label='Optimized server')
-
+x = []
+y = []
+for measure in d4.get(1):
+    (fs, tim, pl) = measure
+    x.append(pl)
+    y.append(tim)
+plt.plot(x, y, label='Basic server', color='cyan')
 plt.title(titles[0])
 plt.ylabel(y_axis)
+plt.xlabel('Password length')
 plt.ylim(bottom=0)
 plt.grid()
 # plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
 plt.savefig(names[2] + '.png', bbox_inches='tight')
+plt.show()
+x = []
+y = []
+for measure in d4.get(1):
+    (fs, tim, pl) = measure
+    x.append(pl)
+    y.append(tim)
+plt.plot(x, y, label='Optimized server', color='magenta')
+
+plt.title(titles[0])
+plt.ylabel(y_axis)
+plt.xlabel('Password length')
+plt.ylim(bottom=0)
+plt.grid()
+# plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
+plt.savefig(names[3] + '.png', bbox_inches='tight')
 plt.show()
