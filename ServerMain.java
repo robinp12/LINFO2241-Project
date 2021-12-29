@@ -120,6 +120,8 @@ class ClientHandler implements Runnable{
     private final File decryptedFile;
     private final File networkFile;
     private int i;
+    private int pwdLength;
+
 
     public ClientHandler(Socket ss, int i, File decryptedFile, File networkFile) {
         this.i = i;
@@ -169,6 +171,7 @@ class ClientHandler implements Runnable{
     @Override
     public synchronized void run() {
 
+        long responseTime = -1;
         // Stream to read request from socket
         InputStream inputStream = null;
         try {
@@ -182,7 +185,7 @@ class ClientHandler implements Runnable{
             // Read data from client
             Request request = readRequest(dataInputStream);
             long fileLength = request.getLengthFile();
-            int pwdLength = request.getLengthPwd();
+            pwdLength = request.getLengthPwd();
             String hashPwd = arrayHashToString(request.getHashPassword());
 
             // Stream to write the file to decrypt
@@ -192,6 +195,7 @@ class ClientHandler implements Runnable{
             FileManagement.receiveFile(inputStream, outFile, fileLength);
 
             /* Bruteforce password */
+            long start = System.currentTimeMillis();
             BruteForcing bruteForcing = new BruteForcing(pwdLength, hashPwd);
 
             // Put method in a thread
@@ -202,7 +206,7 @@ class ClientHandler implements Runnable{
 
             // Waiting thread to stop processing before continuing instructions
             thread.join();
-
+            long end = System.currentTimeMillis();
             // Password found
             System.out.println("DECRYPTED " + i);
             SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcing.getPwd());
@@ -215,6 +219,8 @@ class ClientHandler implements Runnable{
             FileManagement.sendFile(inDecrypted, outSocket);
             System.out.println("SENT "+ i);
 
+            responseTime = end - start;
+
             // Close stream and socket
             dataInputStream.close();
             inputStream.close();
@@ -224,6 +230,23 @@ class ClientHandler implements Runnable{
             decryptedFile.delete();
         } catch (IOException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | InterruptedException | BadPaddingException e) {
             e.printStackTrace();
+        }
+        BufferedWriter writer = null;
+        try {
+            File print = new File("graphs/simplebruteforce.txt");
+            writer = new BufferedWriter(new FileWriter(print, true));
+            if (responseTime != -1){writer.write(String.format("%s, %s\n", responseTime, pwdLength));}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                // Close the writer regardless of what happens...
+                assert writer != null;
+                writer.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
     }

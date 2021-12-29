@@ -3,6 +3,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.InvalidKeyException;
@@ -48,7 +49,8 @@ public class ServerMainImproved{
         File networkFile = new File("temp-server.pdf");
         int i = 0;
 
-
+        InetAddress addr =  InetAddress.getByName("java.sun.com");
+        System.out.println(addr.getHostAddress());
         // Server initialization
         ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");
