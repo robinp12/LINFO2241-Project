@@ -10,6 +10,13 @@ X_axis2 = 'Password length'
 y_axis = 'Execution time (ms)'
 names = ["graphs/server.png", "graphs/server-client-delay.png", "graphs/simplebruteforce.png", "graphs/password.png", "graphs/password_opti.png"]
 
+def sortarrays(sorted,ret,dic):
+    for i in sorted:
+        for k in dic.keys():
+            if dic[k] == i:
+                ret[k] = dic[k]
+                break
+
 def get_data(dictionary, file):
     with open(file) as f:
         measures = f.read().splitlines()
@@ -25,6 +32,7 @@ def get_data(dictionary, file):
         l.append((file_length, time, password_length))
         # print(l)
         dictionary[thread_number] = l
+
 def get_data2(dictionary, file):
     with open(file) as f:
         measures = f.read().splitlines()
@@ -34,8 +42,8 @@ def get_data2(dictionary, file):
         time = int(tim)
         password_length = int(pl)
 
-        l = dictionary.get(time, password_length)
-        dictionary[time] = l
+        l = dictionary.get(password_length, time)
+        dictionary[password_length] = l
 
 d1 = {}
 d2 = {}
@@ -48,6 +56,10 @@ get_data(d2, files[1])
 get_data2(d3, files[2])
 #get_data(d4, files[3])
 
+#sort before showing in graphs
+sorted_values = sorted(d3.values()) # Sort the values
+sorted_dict = {}
+sortarrays(sorted_values,sorted_dict,d3)
 
 def make_plot(table, title,name,lab):
     x = list(table.keys())
@@ -68,14 +80,15 @@ def make_plot(table, title,name,lab):
     plt.grid()
     # plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
     plt.savefig(name, bbox_inches='tight')
+    plt.close()
 
 def make_plot2(table, title,name,lab):
     x = []
     y = []
     for e in table:
-        print(e)
-        print(table[e])
-        plt.plot(table[e], e, label=lab, color='black')
+        x.append(e)
+        y.append(table[e])
+    plt.plot(x, y, label=lab, color='red')
     plt.title(title)
     plt.ylabel(y_axis)
     plt.xlabel('Password length')
