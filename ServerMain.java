@@ -207,6 +207,7 @@ class ClientHandler implements Runnable{
             // Waiting thread to stop processing before continuing instructions
             thread.join();
             long end = System.currentTimeMillis();
+
             // Password found
             System.out.println("DECRYPTED " + i);
             SecretKey serverKey = CryptoUtils.getKeyFromPassword(BruteForcing.getPwd());

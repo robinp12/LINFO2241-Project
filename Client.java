@@ -74,7 +74,7 @@ class Client implements Runnable{
             byte[] hashPwd = Main.hashSHA1(password);
             int pwdLength = password.length();
             long file_Length = encryptedFile.length();
-            System.out.println("SENT TO SERVER");
+            System.out.println("SENT TO SERVER :" + password);
             Main.sendRequest(out, hashPwd, pwdLength, file_Length);
             out.flush();
 

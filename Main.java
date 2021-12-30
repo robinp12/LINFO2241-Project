@@ -58,7 +58,7 @@ public class Main {
             ExecutorService executor = Executors.newFixedThreadPool(k);
             System.out.println("Pool of " + k + " clients generated");
             for (int i = 0; i < k; i++){
-                Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "graphs/poolpassword.txt", 4, 4);
+                Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "graphs/poolpassword.txt", 5, 5);
                 executor.execute(cli);
             }
             executor.shutdown();

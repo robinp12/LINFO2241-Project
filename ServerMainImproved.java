@@ -60,6 +60,7 @@ public class ServerMainImproved{
             // Create socket
             Socket socket = ss.accept();
             System.out.println("Connection from: " + socket);
+            long responseTime = -1;
 
             // Stream to read request from socket
             InputStream inputStream = socket.getInputStream();
@@ -81,6 +82,7 @@ public class ServerMainImproved{
             FileManagement.receiveFile(inputStream, outFile, fileLength);
 
             /* Bruteforce password */
+            long start = System.currentTimeMillis();
             BruteForcingImproved bruteForcing = new BruteForcingImproved(pwdLength, hashPwd, 0);
             BruteForcingImproved bruteForcing1 = new BruteForcingImproved(pwdLength, hashPwd, 1);
 
@@ -95,6 +97,7 @@ public class ServerMainImproved{
             // Waiting threads to stop processing before continuing instructions
             thread.join();
             thread1.join();
+            long end = System.currentTimeMillis();
 
             // Password found
             System.out.println("DECRYPTED " + i);
@@ -109,6 +112,8 @@ public class ServerMainImproved{
             FileManagement.sendFile(inDecrypted, outSocket);
             System.out.println("SENT "+ i);
 
+            responseTime = end - start;
+
             i++;
             // Close stream and socket
             dataInputStream.close();
@@ -116,6 +121,23 @@ public class ServerMainImproved{
             inDecrypted.close();
             outFile.close();
             socket.close();
+            BufferedWriter writer = null;
+            try {
+                File print = new File("graphs/improvedbruteforce.txt");
+                writer = new BufferedWriter(new FileWriter(print, true));
+                if (responseTime != -1){writer.write(String.format("%s, %s\n", responseTime, pwdLength));}
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    // Close the writer regardless of what happens...
+                    assert writer != null;
+                    writer.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

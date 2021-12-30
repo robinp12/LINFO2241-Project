@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import numpy.polynomial.polynomial as poly
 from scipy.interpolate import CubicSpline as CS
 
-files = ["graphs/poolpassword.txt", "graphs/onepassword.txt", "graphs/simplebruteforce.txt", "graphs/printfile_pass_opti.txt", "graphs/printfile.txt"]
-titles = ["Server response time", "Bruteforce execution time"]
+files = ["graphs/poolpassword.txt", "graphs/onepassword.txt", "graphs/simplebruteforce.txt", "graphs/improvedbruteforce.txt", "graphs/printfile_pass_opti.txt", "graphs/printfile.txt"]
+titles = ["Server response time", "Password bruteforce execution time"]
 x_axis = 'Number of clients'
 X_axis2 = 'Password length'
 y_axis = 'Execution time (ms)'
-names = ["graphs/server.png", "graphs/server-client-delay.png", "graphs/simplebruteforce.png", "graphs/password.png", "graphs/password_opti.png"]
+names = ["graphs/server.png", "graphs/server-client-delay.png", "graphs/bruteforcePerformance.png", "graphs/password.png", "graphs/password_opti.png"]
 
 def sortarrays(sorted,ret,dic):
     for i in sorted:
@@ -51,15 +51,26 @@ d3 = {}
 d4 = {}
 x3 = linspace(1, 100, 10000)
 
-get_data(d1, files[0])
-get_data(d2, files[1])
-get_data2(d3, files[2])
-#get_data(d4, files[3])
-
 #sort before showing in graphs
+get_data(d1, files[0])
+sorted_values1 = sorted(d1.values()) # Sort the values
+sorted_dict1 = {}
+sortarrays(sorted_values1,sorted_dict1,d1)
+
+get_data(d2, files[1])
+sorted_values2 = sorted(d2.values()) # Sort the values
+sorted_dict2 = {}
+sortarrays(sorted_values2,sorted_dict2,d2)
+
+get_data2(d3, files[2])
 sorted_values = sorted(d3.values()) # Sort the values
 sorted_dict = {}
 sortarrays(sorted_values,sorted_dict,d3)
+
+get_data2(d4, files[3])
+sorted_values3 = sorted(d4.values()) # Sort the values
+sorted_dict3 = {}
+sortarrays(sorted_values3,sorted_dict3,d4)
 
 def make_plot(table, title,name,lab):
     x = list(table.keys())
@@ -82,13 +93,19 @@ def make_plot(table, title,name,lab):
     plt.savefig(name)
     plt.close()
 
-def make_plot2(table, title,name,lab):
+def make_plot2(table,table1, title,name):
     x = []
     y = []
+    x1 = []
+    y1 = []
     for e in table:
         x.append(e)
         y.append(table[e])
-    plt.plot(x, y, label=lab, color='red')
+    for e in table1:
+            x1.append(e)
+            y1.append(table1[e])
+    plt.plot(x, y, label='Basic bruteforce', color='orange')
+    plt.plot(x1, y1, label='Improved bruteforce', color='blue')
     plt.title(title)
     plt.ylabel(y_axis)
     plt.xlabel('Password length')
@@ -100,7 +117,6 @@ def make_plot2(table, title,name,lab):
 
 make_plot(d1,titles[0],names[0],'Clients sending requests at the same time')
 make_plot(d2,titles[0],names[1],'Clients requests delayed')
-make_plot2(d3,titles[1],names[2],'Basic bruteforce')
-#make_plot2(d4,titles[0],names[3],'Optimized server')
+make_plot2(d3,d4,titles[1],names[2])
 
 print("Graphs generated in graphs directory")
