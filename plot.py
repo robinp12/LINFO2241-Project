@@ -4,7 +4,7 @@ import numpy.polynomial.polynomial as poly
 from scipy.interpolate import CubicSpline as CS
 
 files = ["graphs/poolpassword.txt", "graphs/onepassword.txt", "graphs/simplebruteforce.txt", "graphs/printfile_pass_opti.txt", "graphs/printfile.txt"]
-titles = ["Server response time"]
+titles = ["Server response time", "Bruteforce execution time"]
 x_axis = 'Number of clients'
 X_axis2 = 'Password length'
 y_axis = 'Execution time (ms)'
@@ -78,8 +78,8 @@ def make_plot(table, title,name,lab):
     plt.xlabel(x_axis)
     plt.ylim(bottom=0)
     plt.grid()
-    # plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
-    plt.savefig(name, bbox_inches='tight')
+    plt.legend(loc='best', fontsize='small')
+    plt.savefig(name)
     plt.close()
 
 def make_plot2(table, title,name,lab):
@@ -94,13 +94,13 @@ def make_plot2(table, title,name,lab):
     plt.xlabel('Password length')
     plt.ylim(bottom=0)
     plt.grid()
-    # plt.legend(loc='best', ncol=2, fontsize='xx-small', labelspacing=0)
-    plt.savefig(name, bbox_inches='tight')
+    plt.legend(loc='best', fontsize='small')
+    plt.savefig(name)
     plt.close()
 
 make_plot(d1,titles[0],names[0],'Clients sending requests at the same time')
 make_plot(d2,titles[0],names[1],'Clients requests delayed')
-make_plot2(d3,titles[0],names[2],'Basic bruteforce')
+make_plot2(d3,titles[1],names[2],'Basic bruteforce')
 #make_plot2(d4,titles[0],names[3],'Optimized server')
 
 print("Graphs generated in graphs directory")
