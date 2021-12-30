@@ -1,5 +1,5 @@
 *.pdf
-*.txt
+10k-most-common_filered.txt
 out/
 
 .idea/workspace.xml
