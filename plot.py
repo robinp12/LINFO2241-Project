@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy.polynomial.polynomial as poly
 from scipy.interpolate import CubicSpline as CS
 
-files = ["graphs/poolpassword.txt", "graphs/onepassword.txt", "graphs/simplebruteforce.txt", "graphs/improvedbruteforce.txt", "graphs/printfile_pass_opti.txt", "graphs/printfile.txt"]
+files = ["graphs/perfPoolTime.txt", "graphs/perfPwdLen.txt", "graphs/simplebruteforce.txt", "graphs/improvedbruteforce.txt", "graphs/printfile_pass_opti.txt", "graphs/printfile.txt"]
 titles = ["Server response time", "Password bruteforce execution time"]
 x_axis = 'Number of clients'
 X_axis2 = 'Password length'
@@ -22,16 +22,14 @@ def get_data(dictionary, file):
         measures = f.read().splitlines()
 
     for m in measures:
-        tn, fs, tim, pl = m.split(", ")
-        thread_number = int(tn)
-        file_length = int(fs)
-        time = int(tim)
-        password_length = int(pl)
+        client, size, time, length = m.split(", ")
 
-        l = dictionary.get(thread_number, [])
-        l.append((file_length, time, password_length))
-        # print(l)
-        dictionary[thread_number] = l
+        thread_number = int(client)
+        file_length = int(size)
+        time = int(time)
+        password_length = int(length)
+
+        dictionary[thread_number] = [file_length,time,password_length]
 
 def get_data2(dictionary, file):
     with open(file) as f:
@@ -45,44 +43,23 @@ def get_data2(dictionary, file):
         l = dictionary.get(password_length, time)
         dictionary[password_length] = l
 
-d1 = {}
-d2 = {}
-d3 = {}
-d4 = {}
-x3 = linspace(1, 100, 10000)
-
-#sort before showing in graphs
-get_data(d1, files[0])
-sorted_values1 = sorted(d1.values()) # Sort the values
-sorted_dict1 = {}
-sortarrays(sorted_values1,sorted_dict1,d1)
-
-get_data(d2, files[1])
-sorted_values2 = sorted(d2.values()) # Sort the values
-sorted_dict2 = {}
-sortarrays(sorted_values2,sorted_dict2,d2)
-
-get_data2(d3, files[2])
-sorted_values = sorted(d3.values()) # Sort the values
-sorted_dict = {}
-sortarrays(sorted_values,sorted_dict,d3)
-
-get_data2(d4, files[3])
-sorted_values3 = sorted(d4.values()) # Sort the values
-sorted_dict3 = {}
-sortarrays(sorted_values3,sorted_dict3,d4)
-
 def make_plot(table, title,name,lab):
+    plt.figure()
     x = list(table.keys())
     y = []
-    for key in table.keys():
-        length = 0
-        sum = 0
-        for measure in table.get(key):
-            (fs, tim, pl) = measure
-            sum += tim
-            length += 1
+    length = 0
+    sum = 0
+    for measure in table:
+        #print(measure)
+        #print(table[measure])
+        fs = table[measure][0]
+        tim = table[measure][1]
+        pl = table[measure][2]
+
+        sum += tim
+        length += 1
         y.append(sum/length)
+
     plt.plot(x, y, label=lab)
     plt.title(title)
     plt.ylabel(y_axis)
@@ -94,6 +71,7 @@ def make_plot(table, title,name,lab):
     plt.close()
 
 def make_plot2(table,table1, title,name):
+    plt.figure()
     x = []
     y = []
     x1 = []
@@ -101,9 +79,11 @@ def make_plot2(table,table1, title,name):
     for e in table:
         x.append(e)
         y.append(table[e])
+
     for e in table1:
             x1.append(e)
             y1.append(table1[e])
+
     plt.plot(x, y, label='Basic bruteforce', color='orange')
     plt.plot(x1, y1, label='Improved bruteforce', color='blue')
     plt.title(title)
@@ -115,8 +95,20 @@ def make_plot2(table,table1, title,name):
     plt.savefig(name)
     plt.close()
 
+d1 = {}
+d2 = {}
+d3 = {}
+d4 = {}
+
+#Make graph server delay
+get_data(d1, files[0])
+get_data(d2, files[1])
 make_plot(d1,titles[0],names[0],'Clients sending requests at the same time')
 make_plot(d2,titles[0],names[1],'Clients requests delayed')
+
+## Make graph bruteforce time
+get_data2(d4, files[3])
+get_data2(d3, files[2])
 make_plot2(d3,d4,titles[1],names[2])
 
-print("Graphs generated in graphs directory")
+print("Graphs are generated in graphs directory")

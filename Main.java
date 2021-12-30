@@ -1,5 +1,4 @@
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -35,33 +34,97 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        File inputFile = new File("test_file.pdf");
+        long fileLength = inputFile.length();
+
         System.out.println("Enter a password size... (or -1 for pool of client)");
         while(true){
+            long responseTime = -1;
+
             Scanner sc = new Scanner(System.in);
             //Only int input
             while (!sc.hasNextInt()) sc.next();
             int i = sc.nextInt();
             if (i==-1){break;}
-            System.out.println("One password of length "+i +" generated");
+
             ExecutorService executor = Executors.newFixedThreadPool(1);
-            Runnable cli = new Client(1, 1, "localhost", 3333, "test_file.pdf", "graphs/onepassword.txt", i, i);
+            System.out.println("One password of length "+i +" generated");
+
+            long start = System.currentTimeMillis();
+            Runnable cli = new Client(1, inputFile, i, i);
             executor.execute(cli);
             executor.shutdown();
+
+            while (!executor.isTerminated()) {}
+
+            long end = System.currentTimeMillis();
+            responseTime = end - start;
+
+            BufferedWriter writer = null;
+            try {
+                File print = new File("graphs/perfPwdLen.txt");
+                writer = new BufferedWriter(new FileWriter(print, true));
+                if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n",1, fileLength, responseTime, i));}
+                responseTime = 0;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    // Close the writer regardless of what happens...
+                    assert writer != null;
+                    writer.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
         System.out.println("Enter number of client request... (or -1 to exit)");
         while (true){
+            long responseTime = -1;
+            int pwdlen = 3;
+
             Scanner sc = new Scanner(System.in);
+
             //Only int input
             while (!sc.hasNextInt()) sc.next();
             int k = sc.nextInt();
             if (k==-1){break;}
+
             ExecutorService executor = Executors.newFixedThreadPool(k);
             System.out.println("Pool of " + k + " clients generated");
+
+            long start = System.currentTimeMillis();
             for (int i = 0; i < k; i++){
-                Runnable cli = new Client(i, k, "localhost", 3333, "test_file.pdf", "graphs/poolpassword.txt", 5, 5);
+                Runnable cli = new Client(i, inputFile, pwdlen, pwdlen);
                 executor.execute(cli);
             }
             executor.shutdown();
+
+            while (!executor.isTerminated()) {}
+
+            long end = System.currentTimeMillis();
+            responseTime = end - start;
+
+            BufferedWriter writer = null;
+            try {
+                File print = new File("graphs/perfPoolTime.txt");
+                writer = new BufferedWriter(new FileWriter(print, true));
+                if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen));}
+                responseTime = 0;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    // Close the writer regardless of what happens...
+                    assert writer != null;
+                    writer.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
 
     }

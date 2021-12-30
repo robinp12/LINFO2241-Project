@@ -48,9 +48,6 @@ public class ServerMainImproved{
         // Template file from client
         File networkFile = new File("temp-server.pdf");
         int i = 0;
-
-        InetAddress addr =  InetAddress.getByName("java.sun.com");
-        System.out.println(addr.getHostAddress());
         // Server initialization
         ServerSocket ss = new ServerSocket(3333);
         System.out.println("Waiting connection");

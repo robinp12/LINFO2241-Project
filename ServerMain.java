@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class ServerMain{
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
 
         // Server initialization
         ServerSocket ss = new ServerSocket(3333,10);
