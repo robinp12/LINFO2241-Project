@@ -3,6 +3,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.*;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -43,6 +44,8 @@ public class ServerMainImproved{
             InvalidKeySpecException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InterruptedException {
 
+        String ip = Inet4Address.getLocalHost().getHostAddress();
+        System.out.println(ip);
         // Template decrypted file
         File decryptedFile = new File("test_file-decrypted-server.pdf");
         // Template file from client

@@ -2,13 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/10k-most-common_filered.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphs/improvedbruteforce.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphs/perfPoolTime.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphs/perfPwdLen.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphs/simplebruteforce.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ServerMainImproved.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMainImproved.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/improvedbruteforce.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/improvedbruteforce.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/perfPoolTime.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/perfPoolTime.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/perfPwdLen.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/perfPwdLen.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/server-client-delay.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/server-client-delay.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/server.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/server.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/simplebruteforce.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/simplebruteforce.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +54,7 @@
       <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\server" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ServerMainImproved">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="LINFO2241-Project" />
@@ -85,9 +89,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ServerMainImproved" />
         <item itemvalue="Application.ServerMain" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.ServerMainImproved" />
       </list>
     </recent_temporary>
   </component>
@@ -122,7 +126,8 @@
       <workItem from="1640820427264" duration="2818000" />
       <workItem from="1640882156138" duration="609000" />
       <workItem from="1640889693733" duration="4600000" />
-      <workItem from="1640898491337" duration="5277000" />
+      <workItem from="1640898491337" duration="5564000" />
+      <workItem from="1641231879053" duration="1602000" />
     </task>
     <servers />
   </component>

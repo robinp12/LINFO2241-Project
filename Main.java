@@ -83,7 +83,7 @@ public class Main {
         System.out.println("Enter number of client request... (or -1 to exit)");
         while (true){
             long responseTime = -1;
-            int pwdlen = 3;
+            int pwdlen = 2;
 
             Scanner sc = new Scanner(System.in);
 
