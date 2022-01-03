@@ -3,10 +3,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.*;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,15 +41,18 @@ public class ServerMainImproved{
             InvalidKeySpecException, NoSuchPaddingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InterruptedException {
 
-        String ip = Inet4Address.getLocalHost().getHostAddress();
-        System.out.println(ip);
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 3333);
+            String ip = socket.getLocalAddress().getHostAddress();
+            System.out.println(ip);
+        }
         // Template decrypted file
         File decryptedFile = new File("test_file-decrypted-server.pdf");
         // Template file from client
         File networkFile = new File("temp-server.pdf");
         int i = 0;
         // Server initialization
-        ServerSocket ss = new ServerSocket(3333);
+        ServerSocket ss = new ServerSocket(3333,10);
         System.out.println("Waiting connection");
 
         // Loop to receive multiple request from clients

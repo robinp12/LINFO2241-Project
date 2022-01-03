@@ -3,10 +3,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.*;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,8 +15,11 @@ public class ServerMain{
     public static void main(String[] args) throws IOException {
 
         // Server initialization
-        String ip = Inet4Address.getLocalHost().getHostAddress();
-        System.out.println(ip);
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 3333);
+            String ip = socket.getLocalAddress().getHostAddress();
+            System.out.println(ip);
+        }
         ServerSocket ss = new ServerSocket(3333,10);
         System.out.println("Waiting connection");
         int i = 0;
