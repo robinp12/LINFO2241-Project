@@ -237,7 +237,7 @@ class ClientHandler implements Runnable{
         }
         BufferedWriter writer = null;
         try {
-            File print = new File("graphs/simplebruteforce.txt");
+            File print = new File("graphs/CPUTimeSimple.txt");
             writer = new BufferedWriter(new FileWriter(print, true));
             if (responseTime != -1){writer.write(String.format("%s, %s\n", responseTime, pwdLength));}
         } catch (Exception e){

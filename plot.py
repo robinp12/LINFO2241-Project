@@ -3,33 +3,29 @@ import matplotlib.pyplot as plt
 import numpy.polynomial.polynomial as poly
 from scipy.interpolate import CubicSpline as CS
 
-files = ["graphs/perfPoolTime.txt", "graphs/perfPwdLen.txt", "graphs/simplebruteforce.txt", "graphs/improvedbruteforce.txt", "graphs/printfile_pass_opti.txt", "graphs/printfile.txt"]
-titles = ["Server response time", "Password bruteforce execution time"]
+files = ["graphs/NetworkTimeSimple.txt", "graphs/NetworkTimePool.txt", "graphs/CPUTimeSimple.txt", "graphs/CPUTimeImproved.txt"]
+names = ["graphs/NetworkTime.png", "graphs/server-client-delay.png", "graphs/CPUTime.png"]
 x_axis = 'Number of clients'
 X_axis2 = 'Password length'
 y_axis = 'Execution time (ms)'
-names = ["graphs/server.png", "graphs/server-client-delay.png", "graphs/bruteforcePerformance.png", "graphs/password.png", "graphs/password_opti.png"]
 
-def sortarrays(sorted,ret,dic):
-    for i in sorted:
-        for k in dic.keys():
-            if dic[k] == i:
-                ret[k] = dic[k]
-                break
-
-def get_data(dictionary, file):
+def get_data(dictionary,dictionary1, file):
     with open(file) as f:
         measures = f.read().splitlines()
-
+    i = 0
+    a = 0
     for m in measures:
-        client, size, time, length = m.split(", ")
+        client, size, time, pwdlength = m.split(", ")
 
-        thread_number = int(client)
-        file_length = int(size)
-        time = int(time)
-        password_length = int(length)
-
-        dictionary[thread_number] = [file_length,time,password_length]
+        #Divise le tableau en 2 (premiere partie mesure simple et 2eme partie amelioré)
+        if(i<=6):
+        #Simple perf
+            dictionary[i] = [client, size, time, pwdlength]
+        if(size!='2681188'):
+        # Mettre les mesures de taille de fichier dans un tableau spécifique
+            dictionary1[a] = [client, size, time, pwdlength]
+            a=a+1
+        i=i+1
 
 def get_data2(dictionary, file):
     with open(file) as f:
@@ -43,34 +39,34 @@ def get_data2(dictionary, file):
         l = dictionary.get(password_length, time)
         dictionary[password_length] = l
 
-def make_plot(table, title,name,lab):
+def make_plotDelay(table, table2, title, name):
     plt.figure()
-    x = list(table.keys())
-    y = []
-    length = 0
-    sum = 0
+    xsimple = []
+    ysimple = []
     for measure in table:
-        #print(measure)
-        #print(table[measure])
-        fs = table[measure][0]
-        tim = table[measure][1]
-        pl = table[measure][2]
 
-        sum += tim
-        length += 1
-        y.append(sum/length)
+        #client = int(table[measure][0])
+        filesize = table[measure][1]
+        # Calcul du temps sur le reseau (temps total - temps CPU)
+        # pour le server simple
+        time = int(table[measure][2])-table2[measure+1]
+        #password_length = int(table[measure][3])
+        xsimple.append(filesize)
+        ysimple.append(time)
 
-    plt.plot(x, y, label=lab)
+
+    plt.plot([e[:-3] for e in xsimple], ysimple, label="Transfer time", color='orange')
+
     plt.title(title)
     plt.ylabel(y_axis)
-    plt.xlabel(x_axis)
+    plt.xlabel('File size (Kb)')
     plt.ylim(bottom=0)
     plt.grid()
     plt.legend(loc='best', fontsize='small')
     plt.savefig(name)
     plt.close()
 
-def make_plot2(table,table1, title,name):
+def make_plotCPUTime(table,table1, title,name):
     plt.figure()
     x = []
     y = []
@@ -95,20 +91,25 @@ def make_plot2(table,table1, title,name):
     plt.savefig(name)
     plt.close()
 
-d1 = {}
-d2 = {}
-d3 = {}
-d4 = {}
+NetworkSimple = {}
+NetworkImproved = {}
+NetworkPool = {}
+CPUSimple = {}
+CPUSimproved = {}
 
 #Make graph server delay
-get_data(d1, files[0])
-get_data(d2, files[1])
-make_plot(d1,titles[0],names[0],'Clients sending requests at the same time')
-make_plot(d2,titles[0],names[1],'Clients requests delayed')
+get_data(NetworkSimple,NetworkImproved, files[0])
+get_data2(CPUSimproved, files[3])
+get_data2(CPUSimple, files[2])
+
+#get_data(NetworkPool, files[1])
+#make_plot(NetworkPool,"Server response time",names[1],'Clients requests delayed')
 
 ## Make graph bruteforce time
-get_data2(d4, files[3])
-get_data2(d3, files[2])
-make_plot2(d3,d4,titles[1],names[2])
+# Décommenter pour modifier le graph du temps en fonction de la taille des fichiers
+#make_plotDelay(NetworkImproved,CPUSimple,"Time to transfer file through network",names[0])
+
+# Décommenter pour modifier le graph du temps CPU en fonction de la taille du mdp
+#make_plotCPUTime(CPUSimple,CPUSimproved,"Bruteforce execution time on CPU",names[2])
 
 print("Graphs are generated in graphs directory")

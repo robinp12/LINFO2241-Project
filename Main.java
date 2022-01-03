@@ -35,7 +35,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        File inputFile = new File("test_file.pdf");
+        File inputFile = new File("sendable/Files-100KB.zip");
         long fileLength = inputFile.length();
 
         System.out.println("Enter a password size... (or -1 for pool of client)");
@@ -63,7 +63,7 @@ public class Main {
 
             BufferedWriter writer = null;
             try {
-                File print = new File("graphs/perfPwdLen.txt");
+                File print = new File("graphs/NetworkTimeSimple.txt");
                 writer = new BufferedWriter(new FileWriter(print, true));
                 if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n",1, fileLength, responseTime, i));}
                 responseTime = 0;
@@ -109,7 +109,7 @@ public class Main {
 
             BufferedWriter writer = null;
             try {
-                File print = new File("graphs/perfPoolTime.txt");
+                File print = new File("graphs/NetworkTimePool.txt");
                 writer = new BufferedWriter(new FileWriter(print, true));
                 if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen));}
                 responseTime = 0;

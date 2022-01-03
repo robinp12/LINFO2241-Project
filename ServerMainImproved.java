@@ -123,7 +123,7 @@ public class ServerMainImproved{
             socket.close();
             BufferedWriter writer = null;
             try {
-                File print = new File("graphs/improvedbruteforce.txt");
+                File print = new File("graphs/CPUTimeImproved.txt");
                 writer = new BufferedWriter(new FileWriter(print, true));
                 if (responseTime != -1){writer.write(String.format("%s, %s\n", responseTime, pwdLength));}
             } catch (Exception e){
