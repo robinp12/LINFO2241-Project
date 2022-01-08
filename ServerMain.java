@@ -175,6 +175,7 @@ class ClientHandler implements Runnable{
     public synchronized void run() {
 
         long responseTime = -1;
+        long fileLength = -1;
         // Stream to read request from socket
         InputStream inputStream = null;
         try {
@@ -187,7 +188,7 @@ class ClientHandler implements Runnable{
 
             // Read data from client
             Request request = readRequest(dataInputStream);
-            long fileLength = request.getLengthFile();
+            fileLength = request.getLengthFile();
             pwdLength = request.getLengthPwd();
             String hashPwd = arrayHashToString(request.getHashPassword());
 
@@ -237,9 +238,9 @@ class ClientHandler implements Runnable{
         }
         BufferedWriter writer = null;
         try {
-            File print = new File("graphs/CPUTimeSimple.txt");
+            File print = new File("graphs/CPUTimeSimple_network.txt");
             writer = new BufferedWriter(new FileWriter(print, true));
-            if (responseTime != -1){writer.write(String.format("%s, %s\n", responseTime, pwdLength));}
+            if (responseTime != -1){writer.write(String.format("1, %s, %s, %s\n", fileLength, responseTime, pwdLength));}
         } catch (Exception e){
             e.printStackTrace();
         }

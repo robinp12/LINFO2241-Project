@@ -48,7 +48,7 @@ class Client implements Runnable{
             CryptoUtils.encryptFile(keyGenerated, inputFile, encryptedFile);
 
             // Creating socket to connect to server (in this example it runs on the localhost on port 3333)
-            Socket socket = new Socket("192.168.1.37", 3333);
+            Socket socket = new Socket("130.104.151.108", 3333);
 
             // For any I/O operations, a stream is needed where the data are read from or written to. Depending on
             // where the data must be sent to or received from, different kind of stream are used.
