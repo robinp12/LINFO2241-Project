@@ -2,11 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CryptoUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/utils/CryptoUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/utils/FileManagement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/CPUTimeImproved.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/CPUTimeImproved.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/NetworkTimePool.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/NetworkTimePool.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ServerMainImproved.java" beforeDir="false" afterPath="$PROJECT_DIR$/ServerMainImproved.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/CPUTimeSimple.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/CPUTimeSimple.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_file.pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,19 +44,25 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JAVA" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/graphs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\graphs" />
       <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project" />
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\graphs" />
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\server" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project" />
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\client" />
+      <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\graphs" />
       <recent name="C:\Users\robip\OneDrive\Bureau\LINFO2241-Project\server" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.ServerMain">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="LINFO2241-Project" />
@@ -84,8 +98,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.ServerMainImproved" />
         <item itemvalue="Application.ServerMain" />
+        <item itemvalue="Application.ServerMainImproved" />
       </list>
     </recent_temporary>
   </component>
@@ -124,7 +138,7 @@
       <workItem from="1641231879053" duration="19138000" />
       <workItem from="1641293303527" duration="1836000" />
       <workItem from="1641303967115" duration="1253000" />
-      <workItem from="1641740521314" duration="5174000" />
+      <workItem from="1641740521314" duration="9197000" />
     </task>
     <servers />
   </component>

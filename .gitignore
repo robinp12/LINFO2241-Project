@@ -1,6 +1,9 @@
 *.pdf
 10k-most-common_filered.txt
 out/
+!server/temp-server.pdf
+!server/test_file-decrypted-server.pdf
+!client/test_file.pdf
 
 .idea/codeStyles/codeStyleConfig.xml
 

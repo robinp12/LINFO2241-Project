@@ -46,7 +46,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        File inputFile = new File("test_file.pdf");
+        File inputFile = new File("client\\test_file.pdf");
         long fileLength = inputFile.length();
 
         System.out.println("Enter a password size... (or -1 for pool of client)");
