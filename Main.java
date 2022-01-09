@@ -48,7 +48,7 @@ public class Main{
 
     public static void main(String[] args){
 
-        File inputFile = new File("client\\test_file.pdf");
+        File inputFile = new File("client/test_file.pdf");
         long fileLength = inputFile.length();
 
         System.out.println("Enter a password size... (or -1 for pool of client)");
@@ -135,7 +135,7 @@ public class Main{
 
             BufferedWriter writer = null;
             try {
-                File print = new File("graphs/NetworkTimePool.txt");
+                File print = new File("graphs/NetworkTimePool_new.txt");
                 writer = new BufferedWriter(new FileWriter(print, true));
                 if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen, errorRate));}
                 responseTime = 0;
@@ -162,7 +162,7 @@ public class Main{
             ExecutorService executor = Executors.newFixedThreadPool(1);
 
             long start = System.currentTimeMillis();
-            Runnable cli = new Client(1, inputFile, 4, 4);
+            Runnable cli = new Client(1, inputFile, 4, 4, 1);
             executor.execute(cli);
             executor.shutdown();
 

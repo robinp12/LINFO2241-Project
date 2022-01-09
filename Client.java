@@ -66,7 +66,7 @@ class Client implements Runnable{
             // Creating socket to connect to server (in this example it runs on the localhost on port 3333)
             Socket socket = null;
             try{
-                socket = new Socket("192.168.1.37", 3333);
+                socket = new Socket("192.168.1.13", 3333);
                 // For any I/O operations, a stream is needed where the data are read from or written to. Depending on
                 // where the data must be sent to or received from, different kind of stream are used.
                 OutputStream outSocket = socket.getOutputStream();
