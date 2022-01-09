@@ -40,8 +40,8 @@ class Client implements Runnable{
         return (Math.log(1-R.nextDouble())/(-nbClient));
     }
     public void run(){
+        Main m = new Main();
         if(nbClient!=1){
-            System.out.println((long) (getNext()*10000));
             try {
                 Thread.sleep((long) (getNext()*10000));
             } catch (InterruptedException e) {
@@ -94,6 +94,7 @@ class Client implements Runnable{
                 socket.close();
             }catch (ConnectException e){
                 System.out.println(e);
+                m.countError();
             }
             encryptedFile.delete();
         } catch (IOException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException

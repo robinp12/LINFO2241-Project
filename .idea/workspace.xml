@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/CPUTimeImproved.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/CPUTimeImproved.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/NetworkTimePool.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/NetworkTimePool.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,8 +83,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ServerMainImproved" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.ServerMainImproved" />
         <item itemvalue="Application.ServerMain" />
       </list>
     </recent_temporary>
@@ -122,7 +124,7 @@
       <workItem from="1641231879053" duration="19138000" />
       <workItem from="1641293303527" duration="1836000" />
       <workItem from="1641303967115" duration="1253000" />
-      <workItem from="1641740521314" duration="2623000" />
+      <workItem from="1641740521314" duration="5174000" />
     </task>
     <servers />
   </component>

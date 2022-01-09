@@ -16,6 +16,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
+    private static int errorRate = 0;
+    public void countError(){
+        errorRate++;
+    }
     /**
      * This function hashes a string with the SHA-1 algorithm
      * @param data The string to hash
@@ -74,6 +78,7 @@ public class Main {
                 writer = new BufferedWriter(new FileWriter(print, true));
                 if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n",1, fileLength, responseTime, i));}
                 responseTime = 0;
+                errorRate = 0;
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -112,14 +117,16 @@ public class Main {
             while (!executor.isTerminated()) {}
 
             long end = System.currentTimeMillis();
+            System.out.println("REFUSED REQUEST : " + errorRate);
             responseTime = end - start;
 
             BufferedWriter writer = null;
             try {
                 File print = new File("graphs/NetworkTimePool.txt");
                 writer = new BufferedWriter(new FileWriter(print, true));
-                if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen));}
+                if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen, errorRate));}
                 responseTime = 0;
+                errorRate = 0;
             } catch (Exception e){
                 e.printStackTrace();
             }
