@@ -1,3 +1,7 @@
+import utils.CryptoUtils;
+import utils.FileManagement;
+import utils.Request;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -13,7 +17,7 @@ public class ServerMainImproved{
 
     /**
      * @param in Stream from which to read the request
-     * @return Request with information required by the server to process encrypted file
+     * @return utils.Request with information required by the server to process encrypted file
      */
     public static Request readRequest(DataInputStream in) throws IOException {
         byte [] hashPwd = new byte[20];
@@ -47,9 +51,9 @@ public class ServerMainImproved{
             System.out.println(ip);
         }
         // Template decrypted file
-        File decryptedFile = new File("test_file-decrypted-server.pdf");
+        File decryptedFile = new File("server\\test_file-decrypted-server.pdf");
         // Template file from client
-        File networkFile = new File("temp-server.pdf");
+        File networkFile = new File("server\\temp-server.pdf");
         int i = 0;
         // Server initialization
         ServerSocket ss = new ServerSocket(3333,10);

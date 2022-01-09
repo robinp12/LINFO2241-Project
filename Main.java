@@ -1,6 +1,13 @@
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import java.io.*;
+import java.net.Socket;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,6 +16,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Main{
 
+    private static int errorRate = 0;
+    public void countError(){
+        errorRate++;
+    }
     /**
      * This function hashes a string with the SHA-1 algorithm
      *
@@ -37,7 +48,7 @@ public class Main{
 
     public static void main(String[] args){
 
-        File inputFile = new File("test_file.pdf");
+        File inputFile = new File("client\\test_file.pdf");
         long fileLength = inputFile.length();
 
         System.out.println("Enter a password size... (or -1 for pool of client)");
@@ -58,7 +69,7 @@ public class Main{
             System.out.println("One password of length " + i + " generated");
 
             long start = System.currentTimeMillis();
-            Runnable cli = new Client(1, inputFile, i, i);
+            Runnable cli = new Client(1, inputFile, i, i,1);
             executor.execute(cli);
             executor.shutdown();
 
@@ -76,6 +87,7 @@ public class Main{
                     writer.write(String.format("%s, %s, %s, %s\n", 1, fileLength, responseTime, i));
                 }
                 responseTime = 0;
+                errorRate = 0;
             } catch (Exception e){
                 e.printStackTrace();
             } finally {
@@ -109,7 +121,7 @@ public class Main{
 
             long start = System.currentTimeMillis();
             for (int i = 0; i < k; i++){
-                Runnable cli = new Client(i, inputFile, pwdlen, pwdlen);
+                Runnable cli = new Client(i, inputFile, pwdlen, pwdlen, k);
                 executor.execute(cli);
             }
             executor.shutdown();
@@ -118,16 +130,16 @@ public class Main{
             }
 
             long end = System.currentTimeMillis();
+            System.out.println("REFUSED REQUEST : " + errorRate);
             responseTime = end - start;
 
             BufferedWriter writer = null;
             try {
                 File print = new File("graphs/NetworkTimePool.txt");
                 writer = new BufferedWriter(new FileWriter(print, true));
-                if (responseTime != -1){
-                    writer.write(String.format("%s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen));
-                }
+                if (responseTime != -1){writer.write(String.format("%s, %s, %s, %s, %s\n", k, fileLength, responseTime, pwdlen, errorRate));}
                 responseTime = 0;
+                errorRate = 0;
             } catch (Exception e){
                 e.printStackTrace();
             } finally {

@@ -1,3 +1,7 @@
+import utils.CryptoUtils;
+import utils.FileManagement;
+import utils.Request;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -8,7 +12,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 
 public class ServerMain{
 
@@ -136,7 +139,7 @@ class ClientHandler implements Runnable{
 
     /**
      * @param in Stream from which to read the request
-     * @return Request with information required by the server to process encrypted file
+     * @return utils.Request with information required by the server to process encrypted file
      */
     public synchronized static Request readRequest(DataInputStream in) throws IOException {
         byte [] hashPwd = new byte[20];
