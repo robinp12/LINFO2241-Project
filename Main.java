@@ -1,6 +1,13 @@
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import java.io.*;
+import java.net.Socket;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,7 +42,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        File inputFile = new File("sendable/Files-100KB.zip");
+        File inputFile = new File("test_file.pdf");
         long fileLength = inputFile.length();
 
         System.out.println("Enter a password size... (or -1 for pool of client)");
@@ -52,7 +59,7 @@ public class Main {
             System.out.println("One password of length "+i +" generated");
 
             long start = System.currentTimeMillis();
-            Runnable cli = new Client(1, inputFile, i, i);
+            Runnable cli = new Client(1, inputFile, i, i,1);
             executor.execute(cli);
             executor.shutdown();
 
@@ -97,7 +104,7 @@ public class Main {
 
             long start = System.currentTimeMillis();
             for (int i = 0; i < k; i++){
-                Runnable cli = new Client(i, inputFile, pwdlen, pwdlen);
+                Runnable cli = new Client(i, inputFile, pwdlen, pwdlen, k);
                 executor.execute(cli);
             }
             executor.shutdown();

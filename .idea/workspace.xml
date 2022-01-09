@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="" />
+    <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Main.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -77,9 +81,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ServerMainImproved" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.ServerMain" />
-        <item itemvalue="Application.ServerMainImproved" />
       </list>
     </recent_temporary>
   </component>
@@ -116,6 +120,9 @@
       <workItem from="1640889693733" duration="4600000" />
       <workItem from="1640898491337" duration="5564000" />
       <workItem from="1641231879053" duration="19138000" />
+      <workItem from="1641293303527" duration="1836000" />
+      <workItem from="1641303967115" duration="1253000" />
+      <workItem from="1641740521314" duration="2623000" />
     </task>
     <servers />
   </component>
