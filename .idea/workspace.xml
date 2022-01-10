@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="" />
+    <list default="true" id="d52db6fc-5bcf-46d3-8539-01b61bacb673" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commits_History.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Commits_History.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-16.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-17.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-18.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-19.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-20.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-21.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/file-22.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/CPUTimeSimple_network.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/CPUTimeSimple_network.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/NetworkTimePool_new.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/NetworkTimePool_new.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphs/NetworkTimeSimple.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graphs/NetworkTimeSimple.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

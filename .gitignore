@@ -1,4 +1,5 @@
 *.pdf
+!LINFO2241_Report.pdf
 10k-most-common_filered.txt
 out/
 !server/temp-server.pdf
